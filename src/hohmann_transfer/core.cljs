@@ -1,10 +1,10 @@
 (ns ^:figwheel-hooks hohmann-transfer.core
   (:require
-   [goog.dom :as gdom]
-   [quil.core :as q :include-macros true]
-   [quil.middleware :as m]
-   [reagent.core :as reagent :refer [atom]]
-   [reagent.dom :as rdom]))
+    [goog.dom :as gdom]
+    [quil.core :as q :include-macros true]
+    [quil.middleware :as m]
+    [reagent.core :as reagent :refer [atom]]
+    [reagent.dom :as rdom]))
 
 (println "This text is printed from src/hohmann_transfer/core.cljs. Go ahead and edit it and see reloading in action.")
 
@@ -38,40 +38,42 @@
   ;; optionally touch your app-state to force rerendering depending on
   ;; your application
   ;; (swap! app-state update-in [:__figwheel_counter] inc)
-)
+  )
 
-;; Quill stuff
+
 (defn setup []
-  ; Set frame rate to 30 frames per second.
-  (q/frame-rate 30)
+  (q/frame-rate 1)
   ; Set color mode to HSB (HSV) instead of default RGB.
   (q/color-mode :hsb)
-  ; setup function returns initial state. It contains
-  ; circle color and position.
-  {:color 0
-   :angle 0})
+  {:center-of-gravity {:x (/ (q/width) 2)
+                       :y (/ (q/height) 2)}
+   :orbit-1           {:radius 200}
+   :orbit-2           {:radius 400}})
 
 (defn update-state [state]
-  ; Update sketch state by changing circle color and position.
-  {:color (mod (+ (:color state) 0.7) 255)
-   :angle (+ (:angle state) 0.1)})
+  ;TODO make actual state updates for animation
+  state)
+
+(defn to-radians [deg]
+  (/ (* deg q/PI) 180))
+
+(defn draw-dotted-orbit [{:keys [radius]} {:keys [x y]}]
+  (q/stroke 170)
+  (q/stroke-weight 1)
+  (q/fill nil)
+  (let [arc-steps (partition 2 (map to-radians (range 0 360 2)))]
+    (doseq [[start stop] arc-steps]
+      (q/arc x y radius radius start stop :open))))
+
+(defn draw-center-of-gravity [{:keys [x y]}]
+  (q/fill 0 0 0)
+  (q/ellipse x y 20 20))
 
 (defn draw-state [state]
-  ; Clear the sketch by filling it with light-grey color.
   (q/background 240)
-  ; Set circle color.
-  (q/fill (:color state) 255 255)
-  ; Calculate x and y coordinates of the circle.
-  (let [angle (:angle state)
-        x (* 150 (q/cos angle))
-        y (* 150 (q/sin angle))]
-    ; Move origin point to the center of the sketch.
-    (q/with-translation [(/ (q/width) 2)
-                         (/ (q/height) 2)]
-      ; Draw the circle.
-      (q/ellipse x y 100 100))))
-
-; this function is called in index.html
+  (draw-center-of-gravity (:center-of-gravity state))
+  (draw-dotted-orbit (:orbit-1 state) (:center-of-gravity state))
+  (draw-dotted-orbit (:orbit-2 state) (:center-of-gravity state)))
 
 (q/defsketch hohmann-transfer
   :host "hohmann-transfer"
@@ -81,6 +83,7 @@
   ; update-state is called on each iteration before draw-state.
   :update update-state
   :draw draw-state
+  :settings #(q/smooth 2)
   ; This sketch uses functional-mode middleware.
   ; Check quil wiki for more info about middlewares and particularly
   ; fun-mode.
