@@ -6,6 +6,8 @@
     [reagent.core :as reagent :refer [atom]]
     [reagent.dom :as rdom]))
 
+(def fps 30)
+
 (println "This text is printed from src/hohmann_transfer/core.cljs. Go ahead and edit it and see reloading in action.")
 
 (defn multiply [a b] (* a b))
@@ -40,22 +42,26 @@
   ;; (swap! app-state update-in [:__figwheel_counter] inc)
   )
 
-
 (defn setup []
-  (q/frame-rate 1)
+  (q/frame-rate fps)
   ; Set color mode to HSB (HSV) instead of default RGB.
-  (q/color-mode :hsb)
   {:center-of-gravity {:x (/ (q/width) 2)
                        :y (/ (q/height) 2)}
    :orbit-1           {:radius 200}
-   :orbit-2           {:radius 400}})
+   :orbit-2           {:radius 400}
+   :spacecraft        {:angle  0.0
+                       :radius 200
+                       :revolutions-per-sec 0.1}}) ;use '-' for counter clock-wise
 
-(defn update-state [state]
-  ;TODO make actual state updates for animation
-  state)
+(defn calculate-angle-dif [{:keys [revolutions-per-sec]}]
+  (/ (* revolutions-per-sec 2 Math/PI) fps))
 
 (defn to-radians [deg]
   (/ (* deg q/PI) 180))
+
+(defn update-state [state]
+  (let [dif (calculate-angle-dif (:spacecraft state))]
+    (update-in state [:spacecraft :angle] #(+ % dif))))
 
 (defn draw-dotted-orbit [{:keys [radius]} {:keys [x y]}]
   (q/stroke 170)
@@ -69,11 +75,21 @@
   (q/fill 0 0 0)
   (q/ellipse x y 20 20))
 
+(defn draw-spacecraft [{:keys [angle radius]}]
+  (q/stroke 170)
+  (q/fill 0 153 255)
+  (let [x (* radius (Math/cos angle))
+        y (* radius (Math/sin angle))]
+    (q/with-translation [(/ (q/width) 2) (/ (q/height) 2)]
+      (q/ellipse x y 10 10))))
+
 (defn draw-state [state]
   (q/background 240)
   (draw-center-of-gravity (:center-of-gravity state))
   (draw-dotted-orbit (:orbit-1 state) (:center-of-gravity state))
-  (draw-dotted-orbit (:orbit-2 state) (:center-of-gravity state)))
+  (draw-dotted-orbit (:orbit-2 state) (:center-of-gravity state))
+  (draw-spacecraft (:spacecraft state)))
+
 
 (q/defsketch hohmann-transfer
   :host "hohmann-transfer"
