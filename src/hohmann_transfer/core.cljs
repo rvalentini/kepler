@@ -6,6 +6,15 @@
     [reagent.core :as reagent :refer [atom]]
     [reagent.dom :as rdom]))
 
+;; TERMS
+;; apoapsis = largest distance between two bodies orbiting around the same center of mass on elliptic curves
+;; periapsis = shortest distance between two bodies orbiting around the same center of mass on elliptic curves
+;;
+
+;; FORMULARS
+;; E-kin = 1/2 mv^2
+;; Thābit ibn Qurra formular for arbitraty triangles: a^2 + b^2 = c * (r + s)
+
 (def fps 30)
 
 (println "This text is printed from src/hohmann_transfer/core.cljs. Go ahead and edit it and see reloading in action.")
@@ -47,11 +56,11 @@
   ; Set color mode to HSB (HSV) instead of default RGB.
   {:center-of-gravity {:x (/ (q/width) 2)
                        :y (/ (q/height) 2)}
-   :orbit-1           {:radius 200}
-   :orbit-2           {:radius 400}
+   :orbit-1           {:radius 100}
+   :orbit-2           {:radius 200}
    :spacecraft        {:angle  0.0
                        :radius 200
-                       :revolutions-per-sec 0.1}}) ;use '-' for counter clock-wise
+                       :revolutions-per-sec 0.3}}) ;use '-' for counter clock-wise
 
 (defn calculate-angle-dif [{:keys [revolutions-per-sec]}]
   (/ (* revolutions-per-sec 2 Math/PI) fps))
@@ -69,18 +78,28 @@
   (q/fill nil)
   (let [arc-steps (partition 2 (map to-radians (range 0 360 2)))]
     (doseq [[start stop] arc-steps]
-      (q/arc x y radius radius start stop :open))))
+      (q/arc x y (* radius 2) (* radius 2)  start stop :open))))
+
+(defn draw-color-trace [{:keys [radius angle]} {:keys [x y]}]
+  (q/stroke 255 165 0)
+  (q/stroke-weight 3)
+  (q/fill nil)
+  (let [d (* radius 2)
+        start (- angle (/ Math/PI 2))
+        end (- angle (/ 10  radius))]
+    (q/arc x y d d start end :open)))
 
 (defn draw-center-of-gravity [{:keys [x y]}]
+  (q/stroke 0 0 0)
   (q/fill 0 0 0)
   (q/ellipse x y 20 20))
 
 (defn draw-spacecraft [{:keys [angle radius]}]
   (q/stroke 170)
   (q/fill 0 153 255)
-  (let [x (* radius (Math/cos angle))
-        y (* radius (Math/sin angle))]
-    (q/with-translation [(/ (q/width) 2) (/ (q/height) 2)]
+  (q/with-translation [(/ (q/width) 2) (/ (q/height) 2)]
+    (let [x (* radius (Math/cos angle))
+          y (* radius (Math/sin angle))]
       (q/ellipse x y 10 10))))
 
 (defn draw-state [state]
@@ -88,7 +107,8 @@
   (draw-center-of-gravity (:center-of-gravity state))
   (draw-dotted-orbit (:orbit-1 state) (:center-of-gravity state))
   (draw-dotted-orbit (:orbit-2 state) (:center-of-gravity state))
-  (draw-spacecraft (:spacecraft state)))
+  (draw-spacecraft (:spacecraft state))
+  (draw-color-trace (:spacecraft state) (:center-of-gravity state)))
 
 
 (q/defsketch hohmann-transfer
