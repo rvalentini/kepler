@@ -94,13 +94,27 @@
   (q/fill 0 0 0)
   (q/ellipse x y 20 20))
 
+(defn draw-force-arrow [start angle magnitude]
+  (q/stroke 255 0 0)
+  (let [end-x (+ (:x start) (* (Math/cos angle) magnitude))
+        end-y (+ (:y start) (* (Math/sin angle) magnitude))
+        arrow-angle (to-radians (- 180 25))]
+    (q/line (:x start) (:y start) end-x end-y)
+    (let [l-end-x (+ end-x (* (Math/cos (- angle arrow-angle)) 10))
+          l-end-y (+ end-y (* (Math/sin (- angle arrow-angle)) 10))
+          r-end-x (+ end-x (* (Math/cos (+ angle arrow-angle)) 10))
+          r-end-y (+ end-y (* (Math/sin (+ angle arrow-angle)) 10))]
+      (q/line end-x end-y l-end-x l-end-y)
+      (q/line end-x end-y r-end-x r-end-y))))
+
 (defn draw-spacecraft [{:keys [angle radius]}]
   (q/stroke 170)
   (q/fill 0 153 255)
   (q/with-translation [(/ (q/width) 2) (/ (q/height) 2)]
     (let [x (* radius (Math/cos angle))
           y (* radius (Math/sin angle))]
-      (q/ellipse x y 10 10))))
+      (q/ellipse x y 10 10)
+      (draw-force-arrow {:x x :y y} (+ Math/PI angle) (* 0.6 radius)))))
 
 (defn draw-state [state]
   (q/background 240)
