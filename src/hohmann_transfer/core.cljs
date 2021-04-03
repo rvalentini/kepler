@@ -29,7 +29,7 @@
 
 (defn hello-world []
   [:div
-   [:h1 "Hohmann Transfer"]
+   [:h1 "Moustache Transfer"]
    [:h3 (str "You are able to see the state from a reagent atom here: " @app-state)]])
 
 (defn mount [el]
@@ -55,7 +55,8 @@
   (q/frame-rate fps)
   ; Set color mode to HSB (HSV) instead of default RGB.
   {:center-of-gravity {:x (/ (q/width) 2)
-                       :y (/ (q/height) 2)}
+                       :y (/ (q/height) 2)
+                       :img (q/load-image "imgs/sun.png")}
    :orbit-1           {:radius 100}
    :orbit-2           {:radius 200}
    :spacecraft        {:angle  0.0
@@ -89,10 +90,9 @@
         end (- angle (/ 10  radius))]
     (q/arc x y d d start end :open)))
 
-(defn draw-center-of-gravity [{:keys [x y]}]
-  (q/stroke 0 0 0)
-  (q/fill 0 0 0)
-  (q/ellipse x y 20 20))
+(defn draw-center-of-gravity [{:keys [x y img]}]
+  (when (q/loaded? img)
+    (q/image img (- x 40) (- y 40) 80 80)))
 
 (defn draw-force-arrow [start angle magnitude]
   (q/stroke 255 0 0)
