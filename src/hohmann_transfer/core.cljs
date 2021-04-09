@@ -4,7 +4,8 @@
     [quil.core :as q :include-macros true]
     [quil.middleware :as m]
     [reagent.core :as reagent :refer [atom]]
-    [reagent.dom :as rdom]))
+    [reagent.dom :as rdom]
+    [hohmann-transfer.orbital-elements :as orb]))
 
 ;; TERMS
 ;; apoapsis = largest distance between two bodies orbiting around the same center of mass on elliptic curves
@@ -58,9 +59,9 @@
                        :y (/ (q/height) 2)}
    :orbit-1           {:radius 100}
    :orbit-2           {:radius 200}
-   :spacecraft        {:angle  0.0
-                       :radius 200
-                       :revolutions-per-sec 0.3}}) ;use '-' for counter clock-wise
+   :spacecraft        {:angle               0.0
+                       :radius              200
+                       :revolutions-per-sec 0.3}})          ;use '-' for counter clock-wise
 
 (defn calculate-angle-dif [{:keys [revolutions-per-sec]}]
   (/ (* revolutions-per-sec 2 Math/PI) fps))
@@ -78,7 +79,7 @@
   (q/fill nil)
   (let [arc-steps (partition 2 (map to-radians (range 0 360 2)))]
     (doseq [[start stop] arc-steps]
-      (q/arc x y (* radius 2) (* radius 2)  start stop :open))))
+      (q/arc x y (* radius 2) (* radius 2) start stop :open))))
 
 (defn draw-color-trace [{:keys [radius angle]} {:keys [x y]}]
   (q/stroke 255 165 0)
@@ -86,7 +87,7 @@
   (q/fill nil)
   (let [d (* radius 2)
         start (- angle (/ Math/PI 2))
-        end (- angle (/ 10  radius))]
+        end (- angle (/ 10 radius))]
     (q/arc x y d d start end :open)))
 
 (defn draw-center-of-gravity [{:keys [x y]}]
@@ -116,6 +117,10 @@
       (q/ellipse x y 10 10)
       (draw-force-arrow {:x x :y y} (+ Math/PI angle) (* 0.6 radius)))))
 
+
+(defn update-state-v2 [state]
+  (update-in state [:elliptical-orbit :t] #(+ % 0.000001)))
+
 (defn draw-state [state]
   (q/background 240)
   (draw-center-of-gravity (:center-of-gravity state))
@@ -125,14 +130,45 @@
   (draw-color-trace (:spacecraft state) (:center-of-gravity state)))
 
 
+(defn draw-orbiting-body [state]
+  (q/stroke 170)
+  (q/fill 0 153 255)
+  (q/with-translation [(/ (q/width) 2) (/ (q/height) 2)]
+    (let [orbit (:elliptical-orbit state)
+          [x y z] (orb/orbital-elements->position (:t orbit) (:mass orbit) (:a orbit) (:e orbit) (:i orbit) (:small-omega orbit) (:big-omega orbit))]
+      #_(println (str "time: " (:t orbit)))
+      #_(println (str "position: " x y z))
+      (q/ellipse x y 10 10))))
+
+(defn draw-state-v2 [state]
+  #_(println (str "current time: " (get-in state [:elliptical-orbit :t])))
+  (q/background 240)
+  (draw-center-of-gravity (:center-of-gravity state))
+  (draw-orbiting-body state)
+  )
+
+
+(defn setup-v2 []
+  (q/frame-rate fps)
+  {:center-of-gravity {:x (/ (q/width) 2)
+                       :y (/ (q/height) 2)}
+   :elliptical-orbit  {:t           0
+                       :mass        6.674E24
+                       :a           200
+                       :e           0.5
+                       :i           0
+                       :small-omega (* Math/PI 1.3)
+                       :big-omega   (* Math/PI 0.1)}})
+
+
 (q/defsketch hohmann-transfer
   :host "hohmann-transfer"
   :size [500 500]
   ; setup function called only once, during sketch initialization.
-  :setup setup
+  :setup setup-v2
   ; update-state is called on each iteration before draw-state.
-  :update update-state
-  :draw draw-state
+  :update update-state-v2
+  :draw draw-state-v2
   :settings #(q/smooth 2)
   ; This sketch uses functional-mode middleware.
   ; Check quil wiki for more info about middlewares and particularly
