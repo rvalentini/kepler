@@ -37,8 +37,8 @@
 (defn- compute-true-anomaly [e ecc-anomaly]
   (let [ta (* 2 (Math/atan (* (Math/sqrt (/ (+ 1 e) (- 1 e)))
                           (Math/tan (/ ecc-anomaly 2)))))]
-    (println (str "ecc-anomaly: " ecc-anomaly))
-    (println "True anomaly: " ta)
+    #_(println (str "ecc-anomaly: " ecc-anomaly))
+    #_(println "True anomaly: " ta)
     ta))
 
 (defn- compute-radius [theta e a]
