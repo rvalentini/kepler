@@ -20,13 +20,33 @@
 (defn get-app-element []
   (gdom/getElement "app"))
 
-(defn hello-world []
-  [:div
-   [:h1 "Hohmann Transfer"]
-   [:h3 (str "You are able to see the state from a reagent atom here: " @app-state)]])
+(defn slider []
+  [:input {:type "range" :min 1 :max 100 :step 1
+           :on-change (fn [e]
+                        (let [new-value (js/parseInt (.. e -target -value))]
+                          (println (str "called with new value change" new-value))))}])
+
+(defn app []
+  [:div.dt.mw6.center.pt0.pb5.pv5-m.pv6-ns
+   [:div.db.dtc-ns.v-mid-ns
+    #_[:img.w-100.mw7.w5-ns {:src "http://tachyons.io/img/super-wide.jpg" :alt "Something else"}]
+    [:div {:id "sketch"}]]
+   [:div.db.dtc-ns.v-mid.ph2.pr0-ns.pl3-ns
+    [:div.lh-copy
+     "Eccentricity"
+     [slider]]
+    [:div.lh-copy
+     "Big Omega"
+     [slider]]
+    [:div.lh-copy
+     "Mass of central body"
+     [slider]]
+    [:div.lh-copy
+     "Length of the semimajor axis"
+     [slider]]]])
 
 (defn mount [el]
-  (rdom/render [hello-world] el))
+  (rdom/render [app] el))
 
 (defn mount-app-element []
   (when-let [el (get-app-element)]
@@ -44,7 +64,7 @@
   ;; (swap! app-state update-in [:__figwheel_counter] inc)
   )
 
-(render-sketch sketch) ;;TODO maybe give react-state wrapped as setup function to render-sketch for interactive use
-                       ;;TODO each sketch could offer a 'construct state function' or something similar also as multimethod
+(render-sketch sketch)                                      ;;TODO maybe give react-state wrapped as setup function to render-sketch for interactive use
+;;TODO each sketch could offer a 'construct state function' or something similar also as multimethod
 
 

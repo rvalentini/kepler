@@ -64,7 +64,7 @@
   `a` = semimajor axis, (periapsis dist + apoapsis dist) / 2
   `e` = eccentricity of the elliptic orbit
   `i` = inclination - inlcination of the orbital plane compared to the reference direction
-  `small-omega` = argument of the periapsis - angle that defines the 'rotation/orientation' of the ellipsis in the orbital plane
+  `small-omega` = argument of the periapsis - angle that defines the 'rotation/orientation' of the ellipsis inside the orbital plane
                 This can be seen as the angle between the line of nodes and the periapsis of the ellipsis (rotation around the perpendicular of the ellipsis)
   `big-omega` = longitude of the ascending node - angle between reference direction and the ascending node
               This can be seen as the rotation around the perpendicular of the reference plane
@@ -73,6 +73,7 @@
 
   `t` = point in time since t-pericenter (body passed the periapsis of the orbit)
   `mass` = mass of the central body where mass >> mass of the orbiting body
+  Note: when the inclination is zero ('2D case' where ellipsis lies within the reference plane)
   "
   [t mass a e i small-omega big-omega]
   (let [mean-anomaly (compute-mean-anomaly t a mass)

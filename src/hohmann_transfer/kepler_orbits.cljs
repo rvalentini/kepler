@@ -31,12 +31,12 @@
   {:center-of-gravity {:x (/ (q/width) 2)
                        :y (/ (q/height) 2)}
    :elliptical-orbit  {:t           0
-                       :mass        6.674E24
-                       :a           200
-                       :e           0.5
+                       :mass        3.674E24
+                       :a           150
+                       :e           0.6
                        :i           0
-                       :small-omega (* Math/PI 1.3)
-                       :big-omega   (* Math/PI 0.1)}})
+                       :small-omega 0
+                       :big-omega   (/ Math/PI 2)}})
 
 (defmethod render-sketch :kepler-orbits []
   (q/defsketch kepler-orbits
