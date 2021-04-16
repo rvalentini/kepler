@@ -2,7 +2,7 @@
   (:require
     [quil.core :as q :include-macros true]
     [quil.middleware :as m]
-    [hohmann-transfer.sketch :refer [render-sketch draw-center-of-gravity]]))
+    [hohmann-transfer.sketch :refer [render-sketch build-state draw-center-of-gravity]]))
 
 ;; TERMS
 ;; apoapsis = largest distance between two bodies orbiting around the same center of mass on elliptic curves
@@ -72,21 +72,20 @@
   (draw-spacecraft (:spacecraft state))
   (draw-color-trace (:spacecraft state) (:center-of-gravity state)))
 
-(defn setup []
-  (q/frame-rate fps)
-  {:center-of-gravity {:x (/ (q/width) 2)
-                       :y (/ (q/height) 2)}
+(defmethod build-state :circular-orbits []
+  {:center-of-gravity {:x (/ 500 2)   ;;TODO make 500 configuraable without q/ call
+                       :y (/ 500 2)}
    :orbit-1           {:radius 100}
    :orbit-2           {:radius 200}
    :spacecraft        {:angle               0.0
                        :radius              200
                        :revolutions-per-sec 0.3}})          ;use '-' for counter clock-wise
 
-(defmethod render-sketch :circular-orbits []
+(defmethod render-sketch :circular-orbits [_ state-setup]
   (q/defsketch circular-orbits
     :host "sketch"
     :size [500 500]
-    :setup setup
+    :setup state-setup
     :update update-state
     :draw draw-state
     :settings #(q/smooth 2)

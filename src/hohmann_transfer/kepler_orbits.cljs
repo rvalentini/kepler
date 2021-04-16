@@ -2,10 +2,8 @@
   (:require
     [quil.core :as q :include-macros true]
     [quil.middleware :as m]
-    [hohmann-transfer.sketch :refer [render-sketch draw-center-of-gravity]]
+    [hohmann-transfer.sketch :refer [render-sketch build-state draw-center-of-gravity]]
     [hohmann-transfer.orbital-elements :as orb]))
-
-(def fps 30)
 
 (defn draw-orbiting-body [state]
   (q/stroke 170)
@@ -26,10 +24,9 @@
   (draw-center-of-gravity (:center-of-gravity state))
   (draw-orbiting-body state))
 
-(defn setup []
-  (q/frame-rate fps)
-  {:center-of-gravity {:x (/ (q/width) 2)
-                       :y (/ (q/height) 2)}
+(defmethod build-state :kepler-orbits []
+  {:center-of-gravity {:x (/ 500 2)                         ;;TODO make 500 configuraable without q/ call
+                       :y (/ 500 2)}
    :elliptical-orbit  {:t           0
                        :mass        3.674E24
                        :a           150
@@ -38,11 +35,11 @@
                        :small-omega 0
                        :big-omega   (/ Math/PI 2)}})
 
-(defmethod render-sketch :kepler-orbits []
+(defmethod render-sketch :kepler-orbits [_ state-setup]
   (q/defsketch kepler-orbits
     :host "sketch"
     :size [500 500]
-    :setup setup
+    :setup state-setup
     :update update-state
     :draw draw-state
     :settings #(q/smooth 2)

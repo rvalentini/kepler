@@ -5,7 +5,7 @@
     [quil.middleware :as m]
     [reagent.core :as reagent :refer [atom]]
     [reagent.dom :as rdom]
-    [hohmann-transfer.sketch :refer [render-sketch]]
+    [hohmann-transfer.sketch :refer [render-sketch build-state]]
     [hohmann-transfer.kepler-orbits]
     [hohmann-transfer.circular-orbits]))
 
@@ -15,7 +15,7 @@
 (def sketch :kepler-orbits)
 
 ;; define your app data so that it doesn't get over-written on reload
-(defonce app-state (atom {:text "Some app state"}))
+(def app-state (atom (build-state sketch)))
 
 (defn get-app-element []
   (gdom/getElement "app"))
@@ -64,7 +64,11 @@
   ;; (swap! app-state update-in [:__figwheel_counter] inc)
   )
 
-(render-sketch sketch)                                      ;;TODO maybe give react-state wrapped as setup function to render-sketch for interactive use
+(def fps 30)                                                ;TODO move somewhere else
+
+(render-sketch sketch (fn []
+                        (q/frame-rate fps)
+                        @app-state))                                      ;;TODO maybe give react-state wrapped as setup function to render-sketch for interactive use
 ;;TODO each sketch could offer a 'construct state function' or something similar also as multimethod
 
 
