@@ -10,19 +10,18 @@
   (q/fill 0 153 255)
   (q/with-translation [(/ (q/width) 2) (/ (q/height) 2)]
     (let [orbit (:elliptical-orbit state)
-          [x y z] (orb/orbital-elements->position (:t orbit) (:mass orbit) (:a orbit) (:e orbit) (:i orbit) (:small-omega orbit) (:big-omega orbit))]
-      #_(println (str "time: " (:t orbit)))
-      #_(println (str "position: " x y z))
+          [x y _] (orb/orbital-elements->position (:t orbit) (:mass orbit) (:a orbit) (:e orbit) (:i orbit) (:small-omega orbit) (:big-omega orbit))]
       (q/ellipse x y 10 10))))
 
 (defn update-state [state]
-  (update-in state [:elliptical-orbit :t] #(+ % 0.00001)))
+  #_(println (str "STATE IS: " @state))
+  (swap! state assoc-in [:elliptical-orbit :t] (+ (get-in @state [:elliptical-orbit :t]) 0.00001))
+  state)
 
 (defn draw-state [state]
-  #_(println (str "current time: " (get-in state [:elliptical-orbit :t])))
   (q/background 240)
-  (draw-center-of-gravity (:center-of-gravity state))
-  (draw-orbiting-body state))
+  (draw-center-of-gravity (:center-of-gravity @state))
+  (draw-orbiting-body @state))
 
 (defmethod build-state :kepler-orbits []
   {:center-of-gravity {:x (/ 500 2)                         ;;TODO make 500 configuraable without q/ call
