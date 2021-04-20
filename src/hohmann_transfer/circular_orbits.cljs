@@ -2,7 +2,7 @@
   (:require
     [quil.core :as q :include-macros true]
     [quil.middleware :as m]
-    [hohmann-transfer.sketch :refer [render-sketch build-state draw-center-of-gravity]]))
+    [hohmann-transfer.sketch :refer [render-sketch build-state draw-center-of-gravity to-radians]]))
 
 ;; TERMS
 ;; apoapsis = largest distance between two bodies orbiting around the same center of mass on elliptic curves
@@ -13,9 +13,6 @@
 ;; Thābit ibn Qurra formular for arbitraty triangles: a^2 + b^2 = c * (r + s)
 
 (def fps 30)
-
-(defn to-radians [deg]
-  (/ (* deg q/PI) 180))
 
 (defn draw-force-arrow [start angle magnitude]
   (q/stroke 255 0 0)

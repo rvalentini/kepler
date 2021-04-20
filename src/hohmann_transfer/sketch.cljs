@@ -6,6 +6,9 @@
 (defmulti render-sketch (fn [name _] name))
 (defmulti build-state identity)
 
+(defn to-radians [deg]
+  (/ (* deg q/PI) 180))
+
 (defn draw-center-of-gravity [{:keys [x y]}]
   (q/stroke 0 0 0)
   (q/fill 0 0 0)
