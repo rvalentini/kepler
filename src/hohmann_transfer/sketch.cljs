@@ -2,6 +2,8 @@
   (:require [quil.core :as q :include-macros true]))
 
 (def fps 30)
+(def width 500)
+(def height 500)
 
 (defmulti render-sketch (fn [name _] name))
 (defmulti build-state identity)

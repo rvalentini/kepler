@@ -2,7 +2,7 @@
   (:require
     [quil.core :as q :include-macros true]
     [quil.middleware :as m]
-    [hohmann-transfer.sketch :refer [render-sketch build-state draw-center-of-gravity to-radians]]))
+    [hohmann-transfer.sketch :as s]))
 
 ;; TERMS
 ;; apoapsis = largest distance between two bodies orbiting around the same center of mass on elliptic curves
@@ -12,13 +12,11 @@
 ;; E-kin = 1/2 mv^2
 ;; Thābit ibn Qurra formular for arbitraty triangles: a^2 + b^2 = c * (r + s)
 
-(def fps 30)
-
 (defn draw-force-arrow [start angle magnitude]
   (q/stroke 255 0 0)
   (let [end-x (+ (:x start) (* (Math/cos angle) magnitude))
         end-y (+ (:y start) (* (Math/sin angle) magnitude))
-        arrow-angle (to-radians (- 180 25))]
+        arrow-angle (s/to-radians (- 180 25))]
     (q/line (:x start) (:y start) end-x end-y)
     (let [l-end-x (+ end-x (* (Math/cos (- angle arrow-angle)) 10))
           l-end-y (+ end-y (* (Math/sin (- angle arrow-angle)) 10))
@@ -36,12 +34,11 @@
       (q/ellipse x y 10 10)
       (draw-force-arrow {:x x :y y} (+ Math/PI angle) (* 0.6 radius)))))
 
-
 (defn draw-dotted-orbit [{:keys [radius]} {:keys [x y]}]
   (q/stroke 170)
   (q/stroke-weight 1)
   (q/fill nil)
-  (let [arc-steps (partition 2 (map to-radians (range 0 360 2)))]
+  (let [arc-steps (partition 2 (map s/to-radians (range 0 360 2)))]
     (doseq [[start stop] arc-steps]
       (q/arc x y (* radius 2) (* radius 2) start stop :open))))
 
@@ -55,33 +52,34 @@
     (q/arc x y d d start end :open)))
 
 (defn calculate-angle-dif [{:keys [revolutions-per-sec]}]
-  (/ (* revolutions-per-sec 2 Math/PI) fps))
+  (/ (* revolutions-per-sec 2 Math/PI) s/fps))
 
 (defn update-state [state]
-  (let [dif (calculate-angle-dif (:spacecraft state))]
-    (update-in state [:spacecraft :angle] #(+ % dif))))
+  (let [dif (calculate-angle-dif (:spacecraft @state))]
+    (swap! state assoc-in [:spacecraft :angle] (+ (get-in @state [:spacecraft :angle]) dif))
+    state))
 
 (defn draw-state [state]
   (q/background 240)
-  (draw-center-of-gravity (:center-of-gravity state))
-  (draw-dotted-orbit (:orbit-1 state) (:center-of-gravity state))
-  (draw-dotted-orbit (:orbit-2 state) (:center-of-gravity state))
-  (draw-spacecraft (:spacecraft state))
-  (draw-color-trace (:spacecraft state) (:center-of-gravity state)))
+  (s/draw-center-of-gravity (:center-of-gravity @state))
+  (draw-dotted-orbit (:orbit-1 @state) (:center-of-gravity @state))
+  (draw-dotted-orbit (:orbit-2 @state) (:center-of-gravity @state))
+  (draw-spacecraft (:spacecraft @state))
+  (draw-color-trace (:spacecraft @state) (:center-of-gravity @state)))
 
-(defmethod build-state :circular-orbits []
-  {:center-of-gravity {:x (/ 500 2)   ;;TODO make 500 configuraable without q/ call
-                       :y (/ 500 2)}
+(defmethod s/build-state :circular-orbits []
+  {:center-of-gravity {:x (/ s/width 2)
+                       :y (/ s/height 2)}
    :orbit-1           {:radius 100}
    :orbit-2           {:radius 200}
    :spacecraft        {:angle               0.0
                        :radius              200
                        :revolutions-per-sec 0.3}})          ;use '-' for counter clock-wise
 
-(defmethod render-sketch :circular-orbits [_ state-setup]
+(defmethod s/render-sketch :circular-orbits [_ state-setup]
   (q/defsketch circular-orbits
     :host "sketch"
-    :size [500 500]
+    :size [s/width s/height]
     :setup state-setup
     :update update-state
     :draw draw-state
