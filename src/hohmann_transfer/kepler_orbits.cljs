@@ -46,7 +46,8 @@
 
 (defmethod s/build-state :kepler-orbits []
   {:center-of-gravity {:x (/ s/width 2)
-                       :y (/ s/height 2)}
+                       :y (/ s/height 2)
+                       :radius 10}
    :elliptical-orbit  {:t           0
                        :mass        3.674E23
                        :a           200
@@ -73,6 +74,9 @@
              :on-change (fn [e]
                           (let [new-value (js/parseInt (.. e -target -value))
                                 new-value-scaled (s/transform-scale slider-scale scale new-value)]
+                            (if (= param :mass)
+                              (let [new-radius (s/transform-scale slider-scale {:min 3 :max 30} new-value)]
+                                (swap! app-state assoc-in [:center-of-gravity :radius] new-radius)))
                             (swap! app-state assoc-in [:elliptical-orbit param] new-value-scaled)))}]))
 
 (defn controls [app-state]

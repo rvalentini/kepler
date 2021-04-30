@@ -28,9 +28,7 @@
 (defn- compute-eccentric-anomaly [mean-anomaly e]
   (loop [iter 0
          ecc-anomaly Math/PI]
-    #_(println (str "ECC-anomaly: " ecc-anomaly))
-    #_(println (str "iter: " iter))
-    (if (>= iter 100)
+    (if (>= iter 20)
       ecc-anomaly
       (recur (inc iter) (newton-raphson ecc-anomaly mean-anomaly e)))))
 

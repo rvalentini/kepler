@@ -69,7 +69,8 @@
 
 (defmethod s/build-state :circular-orbits []
   {:center-of-gravity {:x (/ s/width 2)
-                       :y (/ s/height 2)}
+                       :y (/ s/height 2)
+                       :radius 10}
    :orbit-1           {:radius 100}
    :orbit-2           {:radius 200}
    :spacecraft        {:angle               0.0

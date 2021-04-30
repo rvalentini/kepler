@@ -1,7 +1,7 @@
 (ns hohmann-transfer.sketch
   (:require [quil.core :as q :include-macros true]))
 
-(def fps 30)
+(def fps 60)
 (def width 500)
 (def height 500)
 
@@ -11,10 +11,10 @@
 (defn to-radians [deg]
   (/ (* deg q/PI) 180))
 
-(defn draw-center-of-gravity [{:keys [x y]}]
+(defn draw-center-of-gravity [{:keys [x y radius]}]
   (q/stroke 0 0 0)
   (q/fill 0 0 0)
-  (q/ellipse x y 20 20))
+  (q/ellipse x y (* radius 2) (* radius 2)))
 
 (defn transform-scale [scale1 scale2 value]
   (if-not
