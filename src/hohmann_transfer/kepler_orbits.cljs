@@ -94,27 +94,36 @@
 
 (defmethod invariants-satisfied? :big-omega [_] true)
 
+(defmulti on-change (fn [param & _] (if (= param :mass) :mass :not-mass)))
+
+(defmethod on-change :mass [_ app-state slider-scale scale locked-controls new-mass]
+  (let [new-mass-scaled (s/transform-scale slider-scale scale new-mass)
+        new-radius (s/transform-scale slider-scale {:min 3 :max 30} new-mass)
+        invariants-ok (invariants-satisfied? :mass @app-state new-radius)]
+    (swap! app-state #(if invariants-ok
+                        (-> %
+                          (assoc-in [:center-of-gravity :radius] new-radius)
+                          (assoc-in [:elliptical-orbit :mass] new-mass-scaled)
+                          (assoc-in [:view :locked-controls] (remove #{:mass} locked-controls)))
+                        (assoc-in % [:view :locked-controls] (conj locked-controls :mass))))))
+
+(defmethod on-change :not-mass [param app-state slider-scale scale locked-controls new-value]
+  (let [new-value-scaled (s/transform-scale slider-scale scale new-value)
+        invariants-ok (invariants-satisfied? param @app-state new-value-scaled)]
+    (swap! app-state #(if invariants-ok
+                        (-> %
+                          (assoc-in [:elliptical-orbit param] new-value-scaled)
+                          (assoc-in [:view :locked-controls] (remove #{param} locked-controls)))
+                        (assoc-in % [:view :locked-controls] (conj locked-controls param))))))
+
 (defn slider [app-state param value scale]
   (let [slider-scale {:min 0 :max 100}
         locked-controls (get-in @app-state [:view :locked-controls])]
     [:input {:type      "range" :value (s/transform-scale scale slider-scale value) :min 0 :max 100
              :class     (when (some #(= param %) locked-controls) "red")
              :on-change (fn [e]
-                          (let [new-value (js/parseInt (.. e -target -value))
-                                new-value-scaled (s/transform-scale slider-scale scale new-value)
-                                new-radius (s/transform-scale slider-scale {:min 3 :max 30} new-value)
-                                invariants-ok (if (= param :mass)
-                                                (invariants-satisfied? param @app-state new-radius)
-                                                (invariants-satisfied? param @app-state new-value-scaled))]
-                            (swap! app-state #(if invariants-ok
-                                                (-> %
-                                                  ((fn [state]
-                                                     (if (= param :mass)
-                                                       (assoc-in state [:center-of-gravity :radius] new-radius)
-                                                       state)))
-                                                  (assoc-in [:elliptical-orbit param] new-value-scaled)
-                                                  (assoc-in [:view :locked-controls] (remove #{param} locked-controls)))
-                                                (assoc-in % [:view :locked-controls] (conj locked-controls param))))))}]))
+                          (let [new-value (js/parseInt (.. e -target -value))]
+                            (on-change param app-state slider-scale scale locked-controls new-value)))}]))
 
 (defn controls [app-state]
   (let [{:keys [e a mass big-omega]} (:elliptical-orbit @app-state)]
