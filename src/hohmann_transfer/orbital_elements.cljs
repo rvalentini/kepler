@@ -17,7 +17,6 @@
   my = gravitational parameter  (my = GM)"
   (let [my (* gravitational-const mass)
         n (Math/sqrt (/ my (Math/pow a 3)))]
-    #_(println (str "N: " n " and n*t: " (* n t)))
     (* n t)))
 
 (defn- newton-raphson [curr mean-anomaly e]
@@ -27,17 +26,14 @@
 
 (defn- compute-eccentric-anomaly [mean-anomaly e]
   (loop [iter 0
-         ecc-anomaly Math/PI]
+         ecc-anomaly mean-anomaly] ; init ecc-anomaly with mean-anomaly as "random" starting value
     (if (>= iter 20)
       ecc-anomaly
       (recur (inc iter) (newton-raphson ecc-anomaly mean-anomaly e)))))
 
 (defn- compute-true-anomaly [e ecc-anomaly]
-  (let [ta (* 2 (Math/atan (* (Math/sqrt (/ (+ 1 e) (- 1 e)))
-                          (Math/tan (/ ecc-anomaly 2)))))]
-    #_(println (str "ecc-anomaly: " ecc-anomaly))
-    #_(println "True anomaly: " ta)
-    ta))
+  (* 2 (Math/atan (* (Math/sqrt (/ (+ 1 e) (- 1 e)))
+                    (Math/tan (/ ecc-anomaly 2))))))
 
 (defn- compute-radius [theta e a]
   (/
@@ -77,7 +73,8 @@
   (let [mean-anomaly (compute-mean-anomaly t a mass)
         ecc-anomaly (compute-eccentric-anomaly mean-anomaly e)
         theta (compute-true-anomaly e ecc-anomaly)
-        radius (compute-radius theta e a)]
-    (compute-position theta small-omega big-omega i radius)))
+        radius (compute-radius theta e a)
+        position (compute-position theta small-omega big-omega i radius)]
+    position))
 
 
