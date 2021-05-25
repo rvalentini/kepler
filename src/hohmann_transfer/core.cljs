@@ -6,12 +6,14 @@
     [reagent.dom :as rdom]
     [hohmann-transfer.sketch :refer [fps render-sketch build-state]]
     [hohmann-transfer.kepler-orbits :refer [controls]]
-    [hohmann-transfer.circular-orbits]))
+    [hohmann-transfer.circular-orbits]
+    [hohmann-transfer.kepler-2nd-law]))
 
 ;; available sketches:
 ;;  :kepler-orbits
 ;;  :circular-orbits
-(def sketch :kepler-orbits)
+;;  :kepler-2nd-law
+(def sketch :kepler-2nd-law)
 
 (defonce app-state (atom (build-state sketch)))
 

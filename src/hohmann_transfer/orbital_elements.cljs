@@ -69,12 +69,14 @@
   `mass` = mass of the central body where mass >> mass of the orbiting body
   Note: when the inclination is zero ('2D case' where ellipsis lies within the reference plane)
   "
-  [t mass a e i small-omega big-omega]
-  (let [mean-anomaly (compute-mean-anomaly t a mass)
-        ecc-anomaly (compute-eccentric-anomaly mean-anomaly e)
-        theta (compute-true-anomaly e ecc-anomaly)
-        radius (compute-radius theta e a)
-        position (compute-position theta small-omega big-omega i radius)]
-    position))
+  ([t mass a e i small-omega big-omega]
+   (let [mean-anomaly (compute-mean-anomaly t a mass)
+         ecc-anomaly (compute-eccentric-anomaly mean-anomaly e)
+         theta (compute-true-anomaly e ecc-anomaly)
+         radius (compute-radius theta e a)
+         position (compute-position theta small-omega big-omega i radius)]
+     position))
+  ([oe]
+   (orbital-elements->position (:t oe) (:mass oe) (:a oe) (:e oe) (:i oe) (:small-omega oe) (:big-omega oe))))
 
 
