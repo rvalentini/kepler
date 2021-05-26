@@ -16,13 +16,6 @@
     (+ (get-in @state [:elliptical-orbit :t]) s/time-scale-factor))
   state)
 
-(defn calculate-angle [center focus body]
-  (let [v1 [(- (:x center) (:x focus)) (- (:y center) (:y focus))]
-        v2 [(- (:x body) (:x center)) (- (:y body) (:y center))]
-        det (- (* (first v1) (second v2)) (* (second v1) (first v2)))
-        dot (+ (* (first v1) (first v2)) (* (second v1) (second v2)))]
-    (Math/atan2 det dot)))
-
 ;TODO make generic "dotted ellipsis" function and combine with circular use case
 (defn draw-dotted-kepler-orbit [big-omega center width height]
   (q/with-stroke s/dark-brown
@@ -34,9 +27,9 @@
               (q/arc 0 0 width height start stop :open))))))))
 
 (defn draw-delta-arc [center focus big-omega width height [x1 y1 _] [x2 y2 _]]
-  (let [angle1 (calculate-angle center focus {:x (+ (:x focus) x1)
+  (let [angle1 (s/calculate-angle center focus {:x (+ (:x focus) x1)
                                               :y (+ (:y focus) y1)})
-        angle2 (calculate-angle center focus {:x (+ (:x focus) x2)
+        angle2 (s/calculate-angle center focus {:x (+ (:x focus) x2)
                                               :y (+ (:y focus) y2)})]
     (q/with-stroke nil
       (q/with-fill s/pink-opaque
@@ -89,9 +82,9 @@
                        :small-omega 0
                        :big-omega   (- (/ (* 3 Math/PI) 4))}})
 
-(defmethod s/render-sketch :kepler-2nd-law [_ state-setup]
+(defmethod s/render-sketch :kepler-2nd-law [_ state-setup host]
   (q/defsketch kepler-2nd-law
-    :host "sketch"
+    :host host
     :size [s/width s/height]
     :setup state-setup
     :update update-state

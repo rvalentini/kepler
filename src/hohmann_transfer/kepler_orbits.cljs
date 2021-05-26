@@ -57,9 +57,9 @@
                        :big-omega   (/ Math/PI 2)}
    :view {:locked-controls []}})
 
-(defmethod s/render-sketch :kepler-orbits [_ state-setup]
+(defmethod s/render-sketch :kepler-orbits [_ state-setup host]
   (q/defsketch kepler-orbits
-    :host "sketch"
+    :host host
     :size [s/width s/height]
     :setup state-setup
     :update update-state

@@ -12,19 +12,6 @@
 ;; E-kin = 1/2 mv^2
 ;; Thābit ibn Qurra formular for arbitraty triangles: a^2 + b^2 = c * (r + s)
 
-(defn draw-force-arrow [start angle magnitude]
-  (q/stroke 255 0 0)
-  (let [end-x (+ (:x start) (* (Math/cos angle) magnitude))
-        end-y (+ (:y start) (* (Math/sin angle) magnitude))
-        arrow-angle (s/to-radians (- 180 25))]
-    (q/line (:x start) (:y start) end-x end-y)
-    (let [l-end-x (+ end-x (* (Math/cos (- angle arrow-angle)) 10))
-          l-end-y (+ end-y (* (Math/sin (- angle arrow-angle)) 10))
-          r-end-x (+ end-x (* (Math/cos (+ angle arrow-angle)) 10))
-          r-end-y (+ end-y (* (Math/sin (+ angle arrow-angle)) 10))]
-      (q/line end-x end-y l-end-x l-end-y)
-      (q/line end-x end-y r-end-x r-end-y))))
-
 (defn draw-spacecraft [{:keys [angle radius]}]
   (q/stroke 170)
   (q/fill 0 153 255)
@@ -32,7 +19,7 @@
     (let [x (* radius (Math/cos angle))
           y (* radius (Math/sin angle))]
       (q/ellipse x y 10 10)
-      (draw-force-arrow {:x x :y y} (+ Math/PI angle) (* 0.6 radius)))))
+      (s/draw-force-arrow {:x x :y y} (+ Math/PI angle) (* 0.6 radius)))))
 
 (defn draw-dotted-orbit [{:keys [radius]} {:keys [x y]}]
   (q/stroke 170)
@@ -77,9 +64,9 @@
                        :radius              200
                        :revolutions-per-sec 0.3}})          ;use '-' for counter clock-wise
 
-(defmethod s/render-sketch :circular-orbits [_ state-setup]
+(defmethod s/render-sketch :circular-orbits [_ state-setup host]
   (q/defsketch circular-orbits
-    :host "sketch"
+    :host host
     :size [s/width s/height]
     :setup state-setup
     :update update-state

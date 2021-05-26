@@ -1,9 +1,7 @@
-(ns hohmann-transfer.orbital-elements)
+(ns hohmann-transfer.orbital-elements
+  (:require [hohmann-transfer.sketch :refer [gravitational-const]]))
 
 ;; This namespace contains utility functions for Kepler orbital elements computations
-
-;; G =  6.674×10−11 m^3⋅kg^−1⋅s^−2
-(def gravitational-const 6.674E-11)
 
 (defn- compute-mean-anomaly [t a mass]
   "This function computes the mean anomaly, which is the fraction of the orbit represented as angle that the
