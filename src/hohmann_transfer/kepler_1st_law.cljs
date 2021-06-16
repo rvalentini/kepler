@@ -6,10 +6,6 @@
     [hohmann-transfer.orbital-elements :as orb]
     [hohmann-transfer.sketch :refer [gravitational-const draw-force-arrow]]))
 
-
-;TODO (1) make a distinction between all four sectors
-;TODO (2) invertiere den Lauf für die oberen beiden Quadranten
-
 (defn calculate-velocity-angle [{{:keys [a e t]} :elliptical-orbit} focus center body]
   (let [center {:x (- (:x center) (:x focus)) :y (- (:y center) (:y focus))}
         focus {:x (- (:x focus) (:x focus)) :y (- (:y focus) (:y focus))}
@@ -21,8 +17,8 @@
         slope (* (- (/ b a)) (/ 1 (Math/tan t-full-angle)))
         angle (Math/atan slope)
         velocity-angle (if (> (s/to-degree t-full-angle) 180)
-                    (- angle Math/PI)
-                    angle)]
+                         (- angle Math/PI)
+                         angle)]
     velocity-angle))
 
 ;TODO combine duplicated code with 2nd law implementation
@@ -30,13 +26,14 @@
   (q/with-fill s/blue
     (q/with-stroke s/blue
       (q/with-translation [(:x focus) (:y focus)]
-        (q/ellipse x y (:r focus) (:r focus))
         (let [raw (calculate-velocity-angle state focus center {:x x :y y})
               big-omega (get-in state [:elliptical-orbit :big-omega])
               angle (+ raw big-omega)]
           (draw-force-arrow {:x x :y y}
             angle
-            velocity))))))
+            velocity))
+        (q/stroke-weight 1)
+        (q/ellipse x y (:r focus) (:r focus))))))
 
 (defn update-state [state]
   (swap! state assoc-in [:elliptical-orbit :t]
@@ -81,9 +78,12 @@
         big-omega (+ Math/PI (get-in @state [:elliptical-orbit :big-omega]))
         focal-dist (* e a)
         center {:x (+ (:x focus) (* focal-dist (Math/cos big-omega)))
-                :y (+ (:y focus) (* focal-dist (Math/sin big-omega)))}]
+                :y (+ (:y focus) (* focal-dist (Math/sin big-omega)))}
+        second-focus {:x (+ (:x center) (* focal-dist (Math/cos big-omega)))
+                      :y (+ (:y center) (* focal-dist (Math/sin big-omega)))}]
     (q/background 240)
-    (s/draw-center-of-gravity (:center-of-gravity @state))
+    (s/draw-center-of-gravity (:center-of-gravity @state) s/yellow)
+    (s/draw-center-of-gravity (assoc second-focus :radius 10) s/light-grey)
     (draw-orbit a e big-omega center)
     (draw-orbiting-body @state focus position center velocity)))
 

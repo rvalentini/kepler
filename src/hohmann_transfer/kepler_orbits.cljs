@@ -6,8 +6,8 @@
     [hohmann-transfer.orbital-elements :as orb]))
 
 (defn draw-orbiting-body [state]
-  (q/stroke 170)
-  (q/fill 206 18 18)
+  (q/stroke s/blue )
+  (q/fill s/blue)
   (q/with-translation [(/ (q/width) 2) (/ (q/height) 2)]
     (let [orbit (:elliptical-orbit state)
           [x y _] (orb/orbital-elements->position (:t orbit) (:mass orbit) (:a orbit) (:e orbit) (:i orbit) (:small-omega orbit) (:big-omega orbit))]
@@ -24,7 +24,7 @@
   (q/fill nil)
   (let [a (get-in state [:elliptical-orbit :a])
         e (get-in state [:elliptical-orbit :e])
-        big-omega (+ Math/PI (get-in state [:elliptical-orbit :big-omega])) ;TODO why + PI necessary at all?
+        big-omega (+ Math/PI (get-in state [:elliptical-orbit :big-omega]))
         x-center (get-in state [:center-of-gravity :x])
         y-center (get-in state [:center-of-gravity :y])
         focal-dist (* e a)

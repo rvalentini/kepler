@@ -25,25 +25,26 @@
 (defn to-degree [rad]
   (/ (* rad 180) Math/PI))
 
-(defn draw-center-of-gravity [{:keys [x y radius]}]
-  ;TODO not complete black!
-  (q/with-stroke dark-brown
-    (q/with-fill dark-brown
-      (q/ellipse x y (* radius 2) (* radius 2)))))
+(defn draw-center-of-gravity
+  ([state] (draw-center-of-gravity state dark-brown))
+  ([{:keys [x y radius]} color]
+   (q/with-stroke color
+     (q/with-fill color
+       (q/ellipse x y (* radius 2) (* radius 2))))))
 
 (defn draw-force-arrow [start angle magnitude]
-  #_(println (:x start) " - " (:y start))
-  (q/stroke 255 0 0)
-  (let [end-x (+ (:x start) (* (Math/cos angle) magnitude))
-        end-y (+ (:y start) (* (Math/sin angle) magnitude))
-        arrow-angle (to-radians (- 180 25))]
-    (q/line (:x start) (:y start) end-x end-y)
-    (let [l-end-x (+ end-x (* (Math/cos (- angle arrow-angle)) 10))
-          l-end-y (+ end-y (* (Math/sin (- angle arrow-angle)) 10))
-          r-end-x (+ end-x (* (Math/cos (+ angle arrow-angle)) 10))
-          r-end-y (+ end-y (* (Math/sin (+ angle arrow-angle)) 10))]
-      (q/line end-x end-y l-end-x l-end-y)
-      (q/line end-x end-y r-end-x r-end-y))))
+  (q/with-stroke [pink]
+    (q/stroke-weight 2)
+    (let [end-x (+ (:x start) (* (Math/cos angle) magnitude))
+          end-y (+ (:y start) (* (Math/sin angle) magnitude))
+          arrow-angle (to-radians (- 180 25))]
+      (q/line (:x start) (:y start) end-x end-y)
+      (let [l-end-x (+ end-x (* (Math/cos (- angle arrow-angle)) 10))
+            l-end-y (+ end-y (* (Math/sin (- angle arrow-angle)) 10))
+            r-end-x (+ end-x (* (Math/cos (+ angle arrow-angle)) 10))
+            r-end-y (+ end-y (* (Math/sin (+ angle arrow-angle)) 10))]
+        (q/line end-x end-y l-end-x l-end-y)
+        (q/line end-x end-y r-end-x r-end-y)))))
 
 (defn transform-scale [scale1 scale2 value]
   (if-not
