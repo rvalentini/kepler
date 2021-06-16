@@ -1,4 +1,4 @@
-(ns hohmann-transfer.kepler-orbits
+(ns hohmann-transfer.kepler_3rd_law
   (:require
     [quil.core :as q :include-macros true]
     [quil.middleware :as m]
@@ -39,7 +39,7 @@
   (draw-orbiting-body @state)
   (draw-dotted-kepler-orbit @state))
 
-(defmethod s/build-state :kepler-orbits []
+(defmethod s/build-state :kepler-3rd-law []
   {:center-of-gravity {:x      (/ s/width 2)
                        :y      (/ s/height 2)
                        :radius 10}
@@ -52,8 +52,8 @@
                        :big-omega   (/ Math/PI 2)}
    :view {:locked-controls []}})
 
-(defmethod s/render-sketch :kepler-orbits [_ state-setup host]
-  (q/defsketch kepler-orbits
+(defmethod s/render-sketch :kepler-3rd-law [_ state-setup host]
+  (q/defsketch kepler-3rd-law
     :host host
     :size [s/width s/height]
     :setup state-setup

@@ -5,21 +5,14 @@
     [reagent.core :refer [atom]]
     [reagent.dom :as rdom]
     [hohmann-transfer.sketch :refer [fps render-sketch build-state]]
-    [hohmann-transfer.kepler-orbits :refer [controls]]
+    [hohmann-transfer.kepler_3rd_law :refer [controls]]
     [hohmann-transfer.circular-orbits]
     [hohmann-transfer.kepler-2nd-law]
     [hohmann-transfer.kepler-1st-law]))
 
-;; available sketches:
-;;  :kepler-orbits
-;;  :circular-orbits
-;;  :kepler-2nd-law
-(def sketch :kepler-2nd-law)
-
-;TODO rename the keywords
 (defonce first-law-state (atom (build-state :kepler-1st-law)))
 (defonce second-law-state (atom (build-state :kepler-2nd-law)))
-(defonce third-law-state (atom (build-state :kepler-orbits)))
+(defonce third-law-state (atom (build-state :kepler-3rd-law)))
 
 (defn layout []
   [:article
@@ -51,14 +44,6 @@
     [:p.f5.f4-ns.lh-copy.measure.mb4 "You don't have to bounce a tennis ball very far in San Francisco before it will hit two developers complaining about how many js tools/frameworks there are for development in 2015 and how much unneccessary complexity they add. Doing a search on twitter for 'too many js tools' or 'yet another js framework' returns... a lot of people lamenting the current state of affairs."]
     [:p.f5.f4-ns.lh-copy.measure "This is most likely, the wrong conversation for us as a community, to be having. The presence of bad tools - shouldn't discourage us from wanting more tools or frameworks. There are more books published in a single day than I will ever be able to read in my lifetime. But this does not make me sad. Or overwhelm me. Mostly I think about how excited I am to read the best books that are being published. And this is where we should push the conversation. How do we build better tools? What does that look like?"]]])
 
-
-(defn app []
-  #_[:div.dt.mw6.center.pt0.pb5.pv5-m.pv6-ns
-   [:div.db.dtc-ns.v-mid-ns
-    [:div {:id "sketch"}]]
-   (if (= sketch :kepler-orbits)
-     (controls app-state))])
-
 (defn mount-app-element []
   (when-let [el (gdom/getElement "app")]
     (rdom/render [layout] el)))
@@ -72,7 +57,7 @@
 (render-sketch :kepler-2nd-law (fn []
                         (q/frame-rate fps)
                         second-law-state) "second-law")
-(render-sketch :kepler-orbits (fn []
+(render-sketch :kepler-3rd-law (fn []
                         (q/frame-rate fps)
                         third-law-state) "third-law")
 (render-sketch :kepler-1st-law (fn []
