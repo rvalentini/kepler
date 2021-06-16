@@ -50,21 +50,10 @@
                               (Math/pow (- focus_y (+ y focus_y)) 2)))]
     (Math/sqrt (* gravitational-const mass (- (/ 2 distance) (/ 1 a))))))
 
-;TODO make generic "dotted ellipsis" function and combine with circular use case
-;TODO combine with 2nd law and circular orbits
-(defn draw-dotted-kepler-orbit [big-omega center width height]
-  (q/with-stroke s/dark-brown
-    (q/with-fill [nil]
-      (let [arc-steps (partition 2 (map s/to-radians (range 0 360 2)))]
-        (q/with-translation [(:x center) (:y center)]
-          (q/with-rotation [big-omega]
-            (doseq [[start stop] arc-steps]
-              (q/arc 0 0 width height start stop :open))))))))
-
 (defn draw-orbit [a e big-omega center]
   (let [height (* 2 a (Math/sqrt (- 1 (Math/pow e 2))))
         width (* 2 a)]
-    (draw-dotted-kepler-orbit big-omega center width height)))
+    (s/draw-dotted-orbit (:x center) (:y center) width height big-omega)))
 
 (defn draw-state [state]
   (let [orbit (:elliptical-orbit @state)

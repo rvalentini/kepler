@@ -16,18 +16,8 @@
     (+ (get-in @state [:elliptical-orbit :t]) s/time-scale-factor))
   state)
 
-;TODO make generic "dotted ellipsis" function and combine with circular use case
-(defn draw-dotted-kepler-orbit [big-omega center width height]
-  (q/with-stroke s/dark-brown
-    (q/with-fill [nil]
-      (let [arc-steps (partition 2 (map s/to-radians (range 0 360 2)))]
-        (q/with-translation [(:x center) (:y center)]
-          (q/with-rotation [big-omega]
-            (doseq [[start stop] arc-steps]
-              (q/arc 0 0 width height start stop :open))))))))
-
 (defn draw-delta-arc [center focus big-omega width height [x1 y1 _] [x2 y2 _]]
-  (let [angle1 (s/calculate-angle center focus {:x (+ (:x focus) x1)
+  (let [angle1 (s/calculate-angle center focus {:x (+ (:x focus) x1) ;TODO try to avoid these "re-translations"
                                               :y (+ (:y focus) y1)})
         angle2 (s/calculate-angle center focus {:x (+ (:x focus) x2)
                                               :y (+ (:y focus) y2)})]
@@ -52,7 +42,7 @@
         width (* 2 a)
         center {:x (+ (:x focus) (* focal-dist (Math/cos big-omega)))
                :y (+ (:y focus) (* focal-dist (Math/sin big-omega)))}]
-    (draw-dotted-kepler-orbit big-omega center width height)
+    (s/draw-dotted-orbit (:x center) (:y center) width height  big-omega)
     (draw-delta-arc center focus big-omega width height position-1 position-2)))
 
 (defn draw-state [state]

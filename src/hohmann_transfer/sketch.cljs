@@ -60,3 +60,13 @@
         dot (+ (* (first v1) (first v2)) (* (second v1) (second v2)))]
     (Math/atan2 det dot)))
 
+(defn draw-dotted-orbit [x y width height rotation ]
+  (q/with-stroke dark-brown
+    (q/with-fill [nil]
+      (let [arc-steps (partition 2 (map to-radians (range 0 360 2)))]
+        (q/with-translation [x y]
+          (q/with-rotation [rotation]
+            (doseq [[start stop] arc-steps]
+              (q/arc 0 0 width height start stop :open)))))))
+  )
+

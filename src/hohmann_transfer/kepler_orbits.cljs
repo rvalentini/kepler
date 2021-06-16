@@ -17,7 +17,6 @@
   (swap! state assoc-in [:elliptical-orbit :t] (+ (get-in @state [:elliptical-orbit :t]) 0.00001))
   state)
 
-;TODO make generic "dotted ellipsis" function and combine with circular use case
 (defn draw-dotted-kepler-orbit [state]
   (q/stroke 170)
   (q/stroke-weight 1)
@@ -31,12 +30,8 @@
         height (* 2 a (Math/sqrt (- 1 (Math/pow e 2))))
         width (* 2 a)
         x (+ x-center (* focal-dist (Math/cos big-omega)))
-        y (+ y-center (* focal-dist (Math/sin big-omega)))
-        arc-steps (partition 2 (map s/to-radians (range 0 360 2)))]
-    (q/translate x y)
-    (q/rotate big-omega)
-    (doseq [[start stop] arc-steps]
-      (q/arc 0 0 width height start stop :open))))
+        y (+ y-center (* focal-dist (Math/sin big-omega)))]
+    (s/draw-dotted-orbit x y width height big-omega )))
 
 (defn draw-state [state]
   (q/background 240)
