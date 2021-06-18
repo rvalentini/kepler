@@ -32,6 +32,13 @@
      (q/with-fill color
        (q/ellipse x y (* radius 2) (* radius 2))))))
 
+(defn draw-orbiting-body [{focus-x :x focus-y :y r :r}
+                          {:keys [x y]}]
+  (q/with-fill blue
+    (q/with-stroke blue
+      (q/with-translation [focus-x focus-y]
+        (q/ellipse x y r r)))))
+
 (defn draw-force-arrow [start angle magnitude]
   (q/with-stroke [pink]
     (q/stroke-weight 2)

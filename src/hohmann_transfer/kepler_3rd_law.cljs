@@ -5,18 +5,11 @@
     [hohmann-transfer.sketch :as s]
     [hohmann-transfer.orbital-elements :as orb]))
 
-(defn draw-orbiting-body [state]
-  (q/stroke s/blue )
-  (q/fill s/blue)
-  (q/with-translation [(/ (q/width) 2) (/ (q/height) 2)]
-    (let [orbit (:elliptical-orbit state)
-          [x y _] (orb/orbital-elements->position (:t orbit) (:mass orbit) (:a orbit) (:e orbit) (:i orbit) (:small-omega orbit) (:big-omega orbit))]
-      (q/ellipse x y 10 10))))
-
 (defn update-state [state]
   (swap! state assoc-in [:elliptical-orbit :t] (+ (get-in @state [:elliptical-orbit :t]) 0.00001))
   state)
 
+;TODO reuse function defined in sketch
 (defn draw-dotted-kepler-orbit [state]
   (q/stroke 170)
   (q/stroke-weight 1)
@@ -36,7 +29,10 @@
 (defn draw-state [state]
   (q/background 240)
   (s/draw-center-of-gravity (:center-of-gravity @state))
-  (draw-orbiting-body @state)
+  (let [[x y _] (orb/orbital-elements->position (:elliptical-orbit @state))]
+    (s/draw-orbiting-body
+      (assoc (:center-of-gravity @state) :r 10)
+      {:x x :y y})) ;TODO make orbital-elements return map
   (draw-dotted-kepler-orbit @state))
 
 (defmethod s/build-state :kepler-3rd-law []

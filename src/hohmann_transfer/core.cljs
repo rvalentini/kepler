@@ -21,7 +21,7 @@
      [:time.f6.mb2.dib.ttu.tracked [:small "01 June, 2021"]]
      [:h3.f2.f1-m.f-headline-l.measure-narrow.lh-title.mv0
       [:span.bg-black-90.lh-copy.white.pa1.tracked-tight "Kepler laws of planetary motion"]]
-     [:h4.f3.fw1.georgia.i "with some nice animations"]
+     [:h4.f3.fw1.georgia.i "explained with some nice animations"]
      [:h5.f6.ttu.tracked.black-80 "By Riccardo Valentini"]]]
    [:div.pa4.ph7-l.georgia.mw9-l.center
     [:p.f5.f3-ns.lh-copy.measure.georgia "Why does this page exist and what can you expect?"]

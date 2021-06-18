@@ -5,12 +5,6 @@
     [hohmann-transfer.sketch :as s]
     [hohmann-transfer.orbital-elements :as orb]))
 
-(defn draw-orbiting-body [focus [x y _]]
-  (q/with-fill s/blue
-    (q/with-stroke s/blue
-      (q/with-translation [(:x focus) (:y focus)]
-        (q/ellipse x y (:r focus) (:r focus))))))
-
 (defn update-state [state]
   (swap! state assoc-in [:elliptical-orbit :t]
     (+ (get-in @state [:elliptical-orbit :t]) s/time-scale-factor))
@@ -57,8 +51,8 @@
     (q/background 240)
     (s/draw-center-of-gravity (:center-of-gravity @state))
     (draw-orbit @state focus position-1 position-2)
-    (draw-orbiting-body focus position-1)
-    (draw-orbiting-body focus position-2)))
+    (s/draw-orbiting-body focus {:x (first position-1) :y (second position-1)}) ;TODO move that into orbital-elements return type
+    (s/draw-orbiting-body focus {:x (first position-2) :y (second position-2)})))
 
 (defmethod s/build-state :kepler-2nd-law []
   {:center-of-gravity {:x      150

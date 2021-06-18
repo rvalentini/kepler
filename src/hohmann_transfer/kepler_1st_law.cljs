@@ -6,7 +6,7 @@
     [hohmann-transfer.orbital-elements :as orb]
     [hohmann-transfer.sketch :refer [gravitational-const draw-force-arrow]]))
 
-(defn calculate-velocity-angle [{{:keys [a e t]} :elliptical-orbit} focus center body]
+(defn calculate-velocity-angle [{{:keys [a e]} :elliptical-orbit} focus center body]
   (let [center {:x (- (:x center) (:x focus)) :y (- (:y center) (:y focus))}
         focus {:x (- (:x focus) (:x focus)) :y (- (:y focus) (:y focus))}
         b (Math/sqrt (* (Math/pow a 2) (- 1 (Math/pow e 2))))
@@ -21,29 +21,15 @@
                          angle)]
     velocity-angle))
 
-;TODO combine duplicated code with 2nd law implementation
-(defn draw-orbiting-body [state focus [x y _] center velocity]
-  (q/with-fill s/blue
-    (q/with-stroke s/blue
-      (q/with-translation [(:x focus) (:y focus)]
-        (let [raw (calculate-velocity-angle state focus center {:x x :y y})
-              big-omega (get-in state [:elliptical-orbit :big-omega])
-              angle (+ raw big-omega)]
-          (draw-force-arrow {:x x :y y}
-            angle
-            velocity))
-        (q/stroke-weight 1)
-        (q/ellipse x y (:r focus) (:r focus))))))
-
 (defn update-state [state]
   (swap! state assoc-in [:elliptical-orbit :t]
     (+ (get-in @state [:elliptical-orbit :t]) s/time-scale-factor))
   state)
 
-(defn calculate-relative-speed [state focus [x y _]]
-  (let [mass (get-in state [:elliptical-orbit :mass])
-        a (get-in state [:elliptical-orbit :a])
-        focus_x (:x focus)
+(defn calculate-relative-speed [{{:keys [mass a]} :elliptical-orbit}
+                                focus
+                                [x y _]]
+  (let [focus_x (:x focus)
         focus_y (:y focus)
         distance (Math/sqrt (+
                               (Math/pow (- focus_x (+ x focus_x)) 2)
@@ -57,13 +43,14 @@
 
 (defn draw-state [state]
   (let [orbit (:elliptical-orbit @state)
-        focus {:x (get-in @state [:center-of-gravity :x])
-               :y (get-in @state [:center-of-gravity :y])
-               :r (get-in @state [:center-of-gravity :radius])}
+        cog (get-in @state [:center-of-gravity])
+        focus {:x (:x cog)
+               :y (:y cog)
+               :r (:radius cog)} ;TODO rename :radius to :r
         position (orb/orbital-elements->position orbit)
         velocity (* 0.0001 (calculate-relative-speed @state focus position))
-        a (get-in @state [:elliptical-orbit :a])
-        e (get-in @state [:elliptical-orbit :e])
+        a (:a orbit)
+        e (:e orbit)
         big-omega (+ Math/PI (get-in @state [:elliptical-orbit :big-omega]))
         focal-dist (* e a)
         center {:x (+ (:x focus) (* focal-dist (Math/cos big-omega)))
@@ -74,7 +61,12 @@
     (s/draw-center-of-gravity (:center-of-gravity @state) s/yellow)
     (s/draw-center-of-gravity (assoc second-focus :radius 10) s/light-grey)
     (draw-orbit a e big-omega center)
-    (draw-orbiting-body @state focus position center velocity)))
+    (let [body {:x (first position) :y (second position)} ;TODO move that into orbital-elements return type
+          angle (+ (get-in @state [:elliptical-orbit :big-omega])
+                  (calculate-velocity-angle @state focus center body))]
+      (s/draw-orbiting-body focus body )
+      (q/with-translation [(:x focus) (:y focus)]
+        (draw-force-arrow body angle velocity)))))
 
 (defmethod s/build-state :kepler-1st-law []
   {:center-of-gravity {:x      150
