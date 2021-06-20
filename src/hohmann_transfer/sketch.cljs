@@ -27,10 +27,10 @@
 
 (defn draw-center-of-gravity
   ([state] (draw-center-of-gravity state dark-brown))
-  ([{:keys [x y radius]} color]
+  ([{:keys [x y r]} color]
    (q/with-stroke color
      (q/with-fill color
-       (q/ellipse x y (* radius 2) (* radius 2))))))
+       (q/ellipse x y (* r 2) (* r 2))))))
 
 (defn draw-orbiting-body [{focus-x :x focus-y :y r :r}
                           {:keys [x y]}]

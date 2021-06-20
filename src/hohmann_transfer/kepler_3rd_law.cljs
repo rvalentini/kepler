@@ -31,9 +31,9 @@
   (draw-dotted-kepler-orbit @state))
 
 (defmethod s/build-state :kepler-3rd-law []
-  {:center-of-gravity {:x      (/ s/width 2)
-                       :y      (/ s/height 2)
-                       :radius 10}
+  {:center-of-gravity {:x (/ s/width 2)
+                       :y (/ s/height 2)
+                       :r 10}
    :elliptical-orbit  {:t           0
                        :mass        3.674E23
                        :a           200
@@ -70,12 +70,12 @@
 
 (defmethod invariants-satisfied? :e [_ app-state new-ecc]
   (let [a (get-in app-state [:elliptical-orbit :a])
-        radius (get-in app-state [:center-of-gravity :radius])]
+        radius (get-in app-state [:center-of-gravity :r])]
     (check-invariants radius new-ecc a)))
 
 (defmethod invariants-satisfied? :a [_ app-state new-a]
   (let [e (get-in app-state [:elliptical-orbit :e])
-        radius (get-in app-state [:center-of-gravity :radius])]
+        radius (get-in app-state [:center-of-gravity :r])]
     (check-invariants radius e new-a)))
 
 (defmethod invariants-satisfied? :big-omega [_] true)
@@ -88,7 +88,7 @@
         invariants-ok (invariants-satisfied? :mass @app-state new-radius)]
     (swap! app-state #(if invariants-ok
                         (-> %
-                          (assoc-in [:center-of-gravity :radius] new-radius)
+                          (assoc-in [:center-of-gravity :r] new-radius)
                           (assoc-in [:elliptical-orbit :mass] new-mass-scaled)
                           (assoc-in [:view :locked-controls] (remove #{:mass} locked-controls)))
                         (assoc-in % [:view :locked-controls] (conj locked-controls :mass))))))

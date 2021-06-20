@@ -19,7 +19,7 @@
       (q/with-fill s/pink-opaque
         (q/triangle
           (:x focus) (:y focus)
-          (+ (:x focus) x1) (+ (:y focus) y1)
+          (+ (:x focus) x1) (+ (:y focus) y1)  ;TODO try to avoid these "re-translations"
           (+ (:x focus) x2) (+ (:y focus) y2))))
     (q/with-translation [(:x center) (:y center)]
       (q/with-rotation [big-omega]
@@ -43,21 +43,19 @@
   (let [period (Math/sqrt (Math/pow (get-in @state [:elliptical-orbit :a]) 3))
         delta-t (* s/time-scale-factor period (/ 1 s/fps))  ;move forward 1s in animation time
         orbit (:elliptical-orbit @state)
-        focus {:x (get-in @state [:center-of-gravity :x])
-               :y (get-in @state [:center-of-gravity :y])
-               :r (get-in @state [:center-of-gravity :radius])}
+        cog (:center-of-gravity @state)
         position-1 (orb/orbital-elements->position orbit)
         position-2 (orb/orbital-elements->position (update-in orbit [:t] #(+ % delta-t)))]
     (q/background 240)
     (s/draw-center-of-gravity (:center-of-gravity @state))
-    (draw-orbit @state focus position-1 position-2)
-    (s/draw-orbiting-body focus position-1)
-    (s/draw-orbiting-body focus position-2)))
+    (draw-orbit @state cog position-1 position-2)
+    (s/draw-orbiting-body cog position-1)
+    (s/draw-orbiting-body cog position-2)))
 
 (defmethod s/build-state :kepler-2nd-law []
-  {:center-of-gravity {:x      150
-                       :y      150
-                       :radius 10}
+  {:center-of-gravity {:x 150
+                       :y 150
+                       :r 10}
    :elliptical-orbit  {:t           0
                        :mass        4E23
                        :a           200

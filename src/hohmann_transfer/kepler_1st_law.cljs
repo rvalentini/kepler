@@ -44,33 +44,30 @@
 (defn draw-state [state]
   (let [orbit (:elliptical-orbit @state)
         cog (get-in @state [:center-of-gravity])
-        focus {:x (:x cog)
-               :y (:y cog)
-               :r (:radius cog)} ;TODO rename :radius to :r
         position (orb/orbital-elements->position orbit)
-        velocity (* 0.0001 (calculate-relative-speed @state focus position))
+        velocity (* 0.0001 (calculate-relative-speed @state cog position))
         a (:a orbit)
         e (:e orbit)
         big-omega (+ Math/PI (get-in @state [:elliptical-orbit :big-omega]))
         focal-dist (* e a)
-        center {:x (+ (:x focus) (* focal-dist (Math/cos big-omega)))
-                :y (+ (:y focus) (* focal-dist (Math/sin big-omega)))}
+        center {:x (+ (:x cog) (* focal-dist (Math/cos big-omega)))
+                :y (+ (:y cog) (* focal-dist (Math/sin big-omega)))}
         second-focus {:x (+ (:x center) (* focal-dist (Math/cos big-omega)))
                       :y (+ (:y center) (* focal-dist (Math/sin big-omega)))}]
     (q/background 240)
     (s/draw-center-of-gravity (:center-of-gravity @state) s/yellow)
-    (s/draw-center-of-gravity (assoc second-focus :radius 10) s/light-grey)
+    (s/draw-center-of-gravity (assoc second-focus :r 10) s/light-grey)
     (draw-orbit a e big-omega center)
     (let [angle (+ (get-in @state [:elliptical-orbit :big-omega])
-                  (calculate-velocity-angle @state focus center position))]
-      (s/draw-orbiting-body focus position )
-      (q/with-translation [(:x focus) (:y focus)]
+                  (calculate-velocity-angle @state cog center position))]
+      (s/draw-orbiting-body cog position)
+      (q/with-translation [(:x cog) (:y cog)]
         (draw-force-arrow position angle velocity)))))
 
 (defmethod s/build-state :kepler-1st-law []
-  {:center-of-gravity {:x      150
-                       :y      150
-                       :radius 10}
+  {:center-of-gravity {:x 150
+                       :y 150
+                       :r 10}
    :elliptical-orbit  {:t           0
                        :mass        4E23
                        :a           200

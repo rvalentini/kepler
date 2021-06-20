@@ -12,30 +12,30 @@
 ;; E-kin = 1/2 mv^2
 ;; Thābit ibn Qurra formular for arbitraty triangles: a^2 + b^2 = c * (r + s)
 
-(defn draw-spacecraft [{:keys [angle radius]}]
+(defn draw-spacecraft [{:keys [angle r]}]
   (q/stroke 170)
   (q/fill 0 153 255)
   (q/with-translation [(/ (q/width) 2) (/ (q/height) 2)]
-    (let [x (* radius (Math/cos angle))
-          y (* radius (Math/sin angle))]
+    (let [x (* r (Math/cos angle))
+          y (* r (Math/sin angle))]
       (q/ellipse x y 10 10)
-      (s/draw-force-arrow {:x x :y y} (+ Math/PI angle) (* 0.6 radius)))))
+      (s/draw-force-arrow {:x x :y y} (+ Math/PI angle) (* 0.6 r)))))
 
-(defn draw-dotted-orbit [{:keys [radius]} {:keys [x y]}]
+(defn draw-dotted-orbit [{:keys [r]} {:keys [x y]}]
   (q/stroke 170)
   (q/stroke-weight 1)
   (q/fill nil)
   (let [arc-steps (partition 2 (map s/to-radians (range 0 360 2)))]
     (doseq [[start stop] arc-steps]
-      (q/arc x y (* radius 2) (* radius 2) start stop :open))))
+      (q/arc x y (* r 2) (* r 2) start stop :open))))
 
-(defn draw-color-trace [{:keys [radius angle]} {:keys [x y]}]
+(defn draw-color-trace [{:keys [r angle]} {:keys [x y]}]
   (q/stroke 255 165 0)
   (q/stroke-weight 3)
   (q/fill nil)
-  (let [d (* radius 2)
+  (let [d (* r 2)
         start (- angle (/ Math/PI 2))
-        end (- angle (/ 10 radius))]
+        end (- angle (/ 10 r))]
     (q/arc x y d d start end :open)))
 
 (defn calculate-angle-dif [{:keys [revolutions-per-sec]}]
@@ -57,11 +57,11 @@
 (defmethod s/build-state :circular-orbits []
   {:center-of-gravity {:x (/ s/width 2)
                        :y (/ s/height 2)
-                       :radius 10}
-   :orbit-1           {:radius 100}
-   :orbit-2           {:radius 200}
+                       :r 10}
+   :orbit-1           {:r 100}
+   :orbit-2           {:r 200}
    :spacecraft        {:angle               0.0
-                       :radius              200
+                       :r                   200
                        :revolutions-per-sec 0.3}})          ;use '-' for counter clock-wise
 
 (defmethod s/render-sketch :circular-orbits [_ state-setup host]
