@@ -9,11 +9,7 @@
   (swap! state assoc-in [:elliptical-orbit :t] (+ (get-in @state [:elliptical-orbit :t]) 0.00001))
   state)
 
-;TODO reuse function defined in sketch
 (defn draw-dotted-kepler-orbit [state]
-  (q/stroke 170)
-  (q/stroke-weight 1)
-  (q/fill nil)
   (let [a (get-in state [:elliptical-orbit :a])
         e (get-in state [:elliptical-orbit :e])
         big-omega (+ Math/PI (get-in state [:elliptical-orbit :big-omega]))
@@ -29,10 +25,9 @@
 (defn draw-state [state]
   (q/background 240)
   (s/draw-center-of-gravity (:center-of-gravity @state))
-  (let [[x y _] (orb/orbital-elements->position (:elliptical-orbit @state))]
+  (let [position (orb/orbital-elements->position (:elliptical-orbit @state))]
     (s/draw-orbiting-body
-      (assoc (:center-of-gravity @state) :r 10)
-      {:x x :y y})) ;TODO make orbital-elements return map
+      (assoc (:center-of-gravity @state) :r 10) position))
   (draw-dotted-kepler-orbit @state))
 
 (defmethod s/build-state :kepler-3rd-law []

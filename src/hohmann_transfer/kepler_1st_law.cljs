@@ -28,7 +28,7 @@
 
 (defn calculate-relative-speed [{{:keys [mass a]} :elliptical-orbit}
                                 focus
-                                [x y _]]
+                                {:keys [x y]}]
   (let [focus_x (:x focus)
         focus_y (:y focus)
         distance (Math/sqrt (+
@@ -61,12 +61,11 @@
     (s/draw-center-of-gravity (:center-of-gravity @state) s/yellow)
     (s/draw-center-of-gravity (assoc second-focus :radius 10) s/light-grey)
     (draw-orbit a e big-omega center)
-    (let [body {:x (first position) :y (second position)} ;TODO move that into orbital-elements return type
-          angle (+ (get-in @state [:elliptical-orbit :big-omega])
-                  (calculate-velocity-angle @state focus center body))]
-      (s/draw-orbiting-body focus body )
+    (let [angle (+ (get-in @state [:elliptical-orbit :big-omega])
+                  (calculate-velocity-angle @state focus center position))]
+      (s/draw-orbiting-body focus position )
       (q/with-translation [(:x focus) (:y focus)]
-        (draw-force-arrow body angle velocity)))))
+        (draw-force-arrow position angle velocity)))))
 
 (defmethod s/build-state :kepler-1st-law []
   {:center-of-gravity {:x      150

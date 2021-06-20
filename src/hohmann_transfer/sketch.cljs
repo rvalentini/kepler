@@ -68,6 +68,8 @@
     (Math/atan2 det dot)))
 
 (defn draw-dotted-orbit [x y width height rotation ]
+  (q/stroke-weight 1)
+  (q/fill nil)
   (q/with-stroke dark-brown
     (q/with-fill [nil]
       (let [arc-steps (partition 2 (map to-radians (range 0 360 2)))]

@@ -10,7 +10,7 @@
     (+ (get-in @state [:elliptical-orbit :t]) s/time-scale-factor))
   state)
 
-(defn draw-delta-arc [center focus big-omega width height [x1 y1 _] [x2 y2 _]]
+(defn draw-delta-arc [center focus big-omega width height {x1 :x y1 :y} {x2 :x y2 :y}]
   (let [angle1 (s/calculate-angle center focus {:x (+ (:x focus) x1) ;TODO try to avoid these "re-translations"
                                               :y (+ (:y focus) y1)})
         angle2 (s/calculate-angle center focus {:x (+ (:x focus) x2)
@@ -51,8 +51,8 @@
     (q/background 240)
     (s/draw-center-of-gravity (:center-of-gravity @state))
     (draw-orbit @state focus position-1 position-2)
-    (s/draw-orbiting-body focus {:x (first position-1) :y (second position-1)}) ;TODO move that into orbital-elements return type
-    (s/draw-orbiting-body focus {:x (first position-2) :y (second position-2)})))
+    (s/draw-orbiting-body focus position-1)
+    (s/draw-orbiting-body focus position-2)))
 
 (defmethod s/build-state :kepler-2nd-law []
   {:center-of-gravity {:x      150

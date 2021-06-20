@@ -46,7 +46,7 @@
                  (* (Math/sin big-omega) (Math/cos (+ small-omega theta)))
                  (* (Math/cos big-omega) (Math/sin (+ small-omega theta)) (Math/cos i))))
         z (* r (* (Math/sin i) (Math/sin (+ small-omega theta))))]
-    [x y z]))
+    {:x x :y y :z z}))
 
 (defn orbital-elements->position
   "This function converts from orbital elements and a point in time `t` to the cartesian position of the body
