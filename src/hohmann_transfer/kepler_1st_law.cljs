@@ -7,8 +7,8 @@
     [hohmann-transfer.sketch :refer [gravitational-const draw-force-arrow]]))
 
 (defn calculate-velocity-angle [{{:keys [a e]} :elliptical-orbit} focus center body]
-  (let [center {:x (- (:x center) (:x focus)) :y (- (:y center) (:y focus))}
-        focus {:x (- (:x focus) (:x focus)) :y (- (:y focus) (:y focus))}
+  (let [center (s/with-translation center (s/invert focus))
+        focus (s/with-translation focus (s/invert focus))
         b (Math/sqrt (* (Math/pow a 2) (- 1 (Math/pow e 2))))
         t-short-angle (s/calculate-angle center focus body)
         t-full-angle (if (neg? t-short-angle)
@@ -27,13 +27,12 @@
   state)
 
 (defn calculate-relative-speed [{{:keys [mass a]} :elliptical-orbit}
-                                focus
+                                {focus-x :x focus-y :y}
                                 {:keys [x y]}]
-  (let [focus_x (:x focus)
-        focus_y (:y focus)
-        distance (Math/sqrt (+
-                              (Math/pow (- focus_x (+ x focus_x)) 2)
-                              (Math/pow (- focus_y (+ y focus_y)) 2)))]
+  (let [distance (Math/sqrt
+                   (+
+                     (Math/pow (- focus-x (+ x focus-x)) 2)
+                     (Math/pow (- focus-y (+ y focus-y)) 2)))]
     (Math/sqrt (* gravitational-const mass (- (/ 2 distance) (/ 1 a))))))
 
 (defn draw-orbit [a e big-omega center]

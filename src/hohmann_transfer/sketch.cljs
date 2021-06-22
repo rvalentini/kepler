@@ -25,6 +25,13 @@
 (defn to-degree [rad]
   (/ (* rad 180) Math/PI))
 
+(defn invert [p]
+  {:x (- (:x p)) :y (- (:y p))})
+
+(defn with-translation [p translation]
+  {:x (+ (:x p) (:x translation))
+   :y (+ (:y p) (:y translation))})
+
 (defn draw-center-of-gravity
   ([state] (draw-center-of-gravity state dark-brown))
   ([{:keys [x y r]} color]
@@ -67,7 +74,7 @@
         dot (+ (* (first v1) (first v2)) (* (second v1) (second v2)))]
     (Math/atan2 det dot)))
 
-(defn draw-dotted-orbit [x y width height rotation ]
+(defn draw-dotted-orbit [x y width height rotation]
   (q/stroke-weight 1)
   (q/fill nil)
   (q/with-stroke dark-brown
@@ -76,6 +83,5 @@
         (q/with-translation [x y]
           (q/with-rotation [rotation]
             (doseq [[start stop] arc-steps]
-              (q/arc 0 0 width height start stop :open)))))))
-  )
+              (q/arc 0 0 width height start stop :open))))))))
 

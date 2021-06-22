@@ -10,17 +10,13 @@
     (+ (get-in @state [:elliptical-orbit :t]) s/time-scale-factor))
   state)
 
-(defn draw-delta-arc [center focus big-omega width height {x1 :x y1 :y} {x2 :x y2 :y}]
-  (let [angle1 (s/calculate-angle center focus {:x (+ (:x focus) x1) ;TODO try to avoid these "re-translations"
-                                              :y (+ (:y focus) y1)})
-        angle2 (s/calculate-angle center focus {:x (+ (:x focus) x2)
-                                              :y (+ (:y focus) y2)})]
+(defn draw-delta-arc [center focus big-omega width height pos-1 pos-2]
+  (let [angle1 (s/calculate-angle center focus (s/with-translation pos-1 focus))
+        angle2 (s/calculate-angle center focus (s/with-translation pos-2 focus))]
     (q/with-stroke nil
       (q/with-fill s/pink-opaque
-        (q/triangle
-          (:x focus) (:y focus)
-          (+ (:x focus) x1) (+ (:y focus) y1)  ;TODO try to avoid these "re-translations"
-          (+ (:x focus) x2) (+ (:y focus) y2))))
+        (q/with-translation [(:x focus) (:y focus)]
+          (q/triangle 0 0 (:x pos-1) (:y pos-1) (:x pos-2) (:y pos-2)))))
     (q/with-translation [(:x center) (:y center)]
       (q/with-rotation [big-omega]
         (q/with-stroke s/pink-opaque
