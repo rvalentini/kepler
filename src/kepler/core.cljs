@@ -1,14 +1,14 @@
-(ns ^:figwheel-hooks hohmann-transfer.core
+(ns ^:figwheel-hooks kepler.core
   (:require
     [goog.dom :as gdom]
     [quil.core :as q :include-macros true]
     [reagent.core :refer [atom]]
     [reagent.dom :as rdom]
-    [hohmann-transfer.sketch :refer [fps render-sketch build-state]]
-    [hohmann-transfer.kepler_3rd_law :refer [controls]]
-    [hohmann-transfer.circular-orbits]
-    [hohmann-transfer.kepler-2nd-law]
-    [hohmann-transfer.kepler-1st-law]))
+    [kepler.sketch :refer [fps render-sketch build-state]]
+    [kepler.kepler_3rd_law :refer [controls]]
+    [kepler.circular-orbits]
+    [kepler.kepler-2nd-law]
+    [kepler.kepler-1st-law]))
 
 (defonce first-law-state (atom (build-state :kepler-1st-law)))
 (defonce second-law-state (atom (build-state :kepler-2nd-law)))

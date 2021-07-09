@@ -1,10 +1,10 @@
-(ns hohmann-transfer.kepler-1st-law
+(ns kepler.kepler-1st-law
   (:require
     [quil.core :as q :include-macros true]
     [quil.middleware :as m]
-    [hohmann-transfer.sketch :as s]
-    [hohmann-transfer.orbital-elements :as orb]
-    [hohmann-transfer.sketch :refer [gravitational-const draw-force-arrow]]))
+    [kepler.sketch :as s]
+    [kepler.orbital-elements :as orb]
+    [kepler.sketch :refer [gravitational-const draw-force-arrow]]))
 
 (defn calculate-velocity-angle [{{:keys [a e]} :elliptical-orbit} focus center body]
   (let [center (s/with-translation center (s/invert focus))

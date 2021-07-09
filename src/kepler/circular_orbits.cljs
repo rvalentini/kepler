@@ -1,8 +1,8 @@
-(ns hohmann-transfer.circular-orbits
+(ns kepler.circular-orbits
   (:require
     [quil.core :as q :include-macros true]
     [quil.middleware :as m]
-    [hohmann-transfer.sketch :as s]))
+    [kepler.sketch :as s]))
 
 ;; TERMS
 ;; apoapsis = largest distance between two bodies orbiting around the same center of mass on elliptic curves

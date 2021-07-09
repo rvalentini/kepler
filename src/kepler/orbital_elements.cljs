@@ -1,5 +1,5 @@
-(ns hohmann-transfer.orbital-elements
-  (:require [hohmann-transfer.sketch :refer [gravitational-const]]))
+(ns kepler.orbital-elements
+  (:require [kepler.sketch :refer [gravitational-const]]))
 
 ;; This namespace contains utility functions for Kepler orbital elements computations
 

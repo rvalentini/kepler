@@ -1,9 +1,9 @@
-(ns hohmann-transfer.kepler_3rd_law
+(ns kepler.kepler_3rd_law
   (:require
     [quil.core :as q :include-macros true]
     [quil.middleware :as m]
-    [hohmann-transfer.sketch :as s]
-    [hohmann-transfer.orbital-elements :as orb]))
+    [kepler.sketch :as s]
+    [kepler.orbital-elements :as orb]))
 
 (defn update-state [state]
   (swap! state assoc-in [:elliptical-orbit :t] (+ (get-in @state [:elliptical-orbit :t]) 0.00001))

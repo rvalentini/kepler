@@ -1,4 +1,4 @@
-(ns hohmann-transfer.core-test
+(ns kepler.core-test
     (:require
      [cljs.test :refer-macros [deftest is testing]]))
 

@@ -1,4 +1,4 @@
-# hohmann-transfer.core
+# kepler
 
 FIXME: Write a one-line description of your library/project.
 

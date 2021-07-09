@@ -1,4 +1,4 @@
-(ns hohmann-transfer.sketch
+(ns kepler.sketch
   (:require [quil.core :as q :include-macros true]))
 
 (def fps 60)
