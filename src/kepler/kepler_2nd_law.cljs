@@ -14,13 +14,13 @@
   (let [angle1 (s/calculate-angle center focus (s/with-translation pos-1 focus))
         angle2 (s/calculate-angle center focus (s/with-translation pos-2 focus))]
     (q/with-stroke nil
-      (q/with-fill s/pink-opaque
+      (q/with-fill s/purple-opaque
         (q/with-translation [(:x focus) (:y focus)]
           (q/triangle 0 0 (:x pos-1) (:y pos-1) (:x pos-2) (:y pos-2)))))
     (q/with-translation [(:x center) (:y center)]
       (q/with-rotation [big-omega]
-        (q/with-stroke s/pink-opaque
-          (q/with-fill s/pink-opaque
+        (q/with-stroke s/purple-opaque
+          (q/with-fill s/purple-opaque
             (q/arc 0 0 width height angle1 angle2 :open)))))))
 
 (defn draw-orbit [state focus position-1 position-2]

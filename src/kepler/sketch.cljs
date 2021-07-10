@@ -10,8 +10,8 @@
 (def gravitational-const 6.674E-11)
 
 (def yellow [255 183 0])
-(def pink [224 101 255])
-(def pink-opaque [224 101 255 100])
+(def purple [224 101 255])
+(def purple-opaque [224 101 255 100])
 (def blue [0 181 203])
 (def dark-brown [79 69 56])
 (def light-grey [223 224 223])
@@ -47,7 +47,7 @@
         (q/ellipse x y r r)))))
 
 (defn draw-force-arrow [start angle magnitude]
-  (q/with-stroke [pink]
+  (q/with-stroke [purple]
     (q/stroke-weight 2)
     (let [end-x (+ (:x start) (* (Math/cos angle) magnitude))
           end-y (+ (:y start) (* (Math/sin angle) magnitude))
