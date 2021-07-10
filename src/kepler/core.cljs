@@ -37,11 +37,11 @@
     [:article
      [:header.bg-gold.sans-serif
       [:div.mw9.center.pa4.pt5-ns.ph7-l
-       [:time.f6.mb2.dib.ttu.tracked [:small "01 June, 2021"]]
+       [:time.f6.mb2.dib.ttu.tracked [:small "10 July, 2021"]]
        [:h3.f2.f1-m.f-headline-l.measure-narrow.lh-title.mv0
         [:span.bg-black-90.lh-copy.white.pa1.tracked-tight "Kepler laws of planetary motion"]]
        [:h4.f3.fw1.georgia.i "explained with some nice animations"]
-       #_[:h5.f6.ttu.tracked.black-80 "By Riccardo Valentini"]]]
+       [:h5.f6.ttu.tracked.black-80 "By Riccardo Valentini"]]]
      [:div.pa4.ph7-l.georgia.mw9-l.center
       [:p.f5.f3-ns.lh-copy.measure.georgia "Hello stranger,"]
       [:p.f5.f4-ns.lh-copy.mb4 "welcome to my website about Johannes Kepler and his discoveries about how our universe works. I'm first and foremost a computer scientist and not a physicist, which means what you see here  is mostly the result of reading Wikipedia articles and watching online lectures about astrophysics.   \nI have a certain curiosity for astrophysics however and tried to make the animations on this site as physically accurate as possible. Hopefully you will find this informative and please excuse any physical inaccuracies you might discover, or better, tell me and I will try to fix them :)"]
@@ -64,12 +64,9 @@
         [:div.db.dtc-ns.v-mid-ns
          [:div {:id "third-law"}]]
         (controls third-law-state)]]
-      #_[:p.f5.f4-ns.lh-copy.measure.mb4 "You don't have to bounce a tennis ball very far in San Francisco before it will hit two developers complaining about how many js tools/frameworks there are for development in 2015 and how much unneccessary complexity they add. Doing a search on twitter for 'too many js tools' or 'yet another js framework' returns... a lot of people lamenting the current state of affairs."]
-      #_[:p.f5.f4-ns.lh-copy.measure "This is most likely, the wrong conversation for us as a community, to be having. The presence of bad tools - shouldn't discourage us from wanting more tools or frameworks. There are more books published in a single day than I will ever be able to read in my lifetime. But this does not make me sad. Or overwhelm me. Mostly I think about how excited I am to read the best books that are being published. And this is where we should push the conversation. How do we build better tools? What does that look like?"]
-      [:p.f5.f3-ns.lh-copy.measure.georgia "FAQs"]
-
-      ]
-     ])
+      [:p:p.f5.f4-ns.lh-copy.mb4 "Unfortunately the third law is not as straight forward to explain as the first two laws, so I thought it might help to go a little interactive here. For the third animation you can play around with the Kepler orbits yourself and change the individual parameters that define the shape of the orbit. Through that, you hopefully get a feeling for how changes in these parameters affect the shape of the orbit, as well as the movement of the orbiting body." [:br][:br] "The 3rd law basically describes the relationship between two of those parameters: the " (linkify "orbital period" "https://en.wikipedia.org/wiki/Orbital_period") " (= the time it takes the orbiting body to compelete a full turn) and the " (linkify "semi-major axis" "https://en.wikipedia.org/wiki/Semi-major_and_semi-minor_axes") " (= half of the distance between the two furthest points of the ellipse). It's hard to get a feeling for this proportion however, since it's not linear but involves the square and cube of these parameters. Nevertheless, this seems to be a suprisingly simple relationship between the two." [:br][:br] "You can use the sliders to change the semi-major axis, as well as the eccentricity and angle of the orbit. Additionally you can increase the mass of the central body, which will also increase the attraction it exerts on the orbiting body. Some \"combinations\" of slider positions are blocked (you might notice the slider turning red), which is only for visual aesthetics, meaning this combination of parameters would give the animation an odd configuration. "]
+      [:p.f5.f3-ns.lh-copy.measure.georgia "Sayonara"]
+      [:p:p.f5.f4-ns.lh-copy.mb4 "Have fun with the animations and I hope this site gave you an interesting take-away or two about Kepler orbits. " [:br][:br] "In case you are interested in how I created these animations: I wrote everything in " (linkify "ClojureScript" "https://clojurescript.org/") " using the awesome drawing and animations library " (linkify "Quil" "http://quil.info/?example=fireworks") ". Here is my " (linkify "Github repository" "https://github.com/rvalentini/kepler")" with the source."]]])
 
   )
 
