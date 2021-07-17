@@ -1,10 +1,20 @@
 (ns kepler.sketch
   (:require [quil.core :as q :include-macros true]))
 
+(def screen-sizes {:small "(max-width: 320px)"
+                   :medium "(max-width: 720px)"
+                   :large "(max-width: 1024px)"
+                   :huge "(min-width: 1024px"})
+
+(defn get-screen-size []
+  (key (first (filter
+                #(true? (. (.matchMedia js/window (second %)) -matches))
+                (seq screen-sizes)))))
+
 (def fps 60)
 (def time-scale-factor (/ 1 100000))
-(def width 500)
-(def height 500)
+(def width (if (contains? #{:large :huge} (get-screen-size)) 500 300))
+(def height (if (contains? #{:large :huge} (get-screen-size)) 500 300))
 
 ;; G =  6.674×10−11 m^3⋅kg^−1⋅s^−2
 (def gravitational-const 6.674E-11)

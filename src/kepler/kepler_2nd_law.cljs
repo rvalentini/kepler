@@ -42,6 +42,7 @@
         cog (:center-of-gravity @state)
         position-1 (orb/orbital-elements->position orbit)
         position-2 (orb/orbital-elements->position (update-in orbit [:t] #(+ % delta-t)))]
+    (q/scale (/ s/height 500))
     (q/background 240)
     (s/draw-center-of-gravity (:center-of-gravity @state))
     (draw-orbit @state cog position-1 position-2)

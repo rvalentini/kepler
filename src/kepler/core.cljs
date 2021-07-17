@@ -50,17 +50,17 @@
       [:p.f4.f3-ns.lh-copy.measure.georgia "First law:"]
       [:p.f4.f2-ns.lh-copy.measure.i.pl4.bl.bw1.b--gold.mb4 "The orbit of a planet is an ellipse with the Sun at one of the two foci.\n"]
       [:p
-       [:div.mw5.mw6-ns.center.pt4 {:id "first-law"}]]
+       [:div.mw6.mw6-ns.center.pt1 {:id "first-law"}]]
       [:p.f5.f4-ns.lh-copy.mb4  "First of all what's an ellipse? The shape is defined through the constant sum of distances between any point on the curve and the two focal points (in the animation marked in " (colorize "yellow" :yellow) " and grey). At least for me, that's not very intuitively accessible. Another way to look at it: it's the shape that you get when you cut through a cone. Depending on how you cut, you might end up with a circle, an ellipse, a parabola or a hyperbola (have a look " parabola ", there you will find a very nice diagram illustrating this). There is now a parameter called " eccentricity ", which basically tells you how \"conic\" the shape is, on the scale from circle to hyperbola. If the eccentricity of the shape is between 0 and 1, the result is called an ellipse, which means it's a closed orbit on which a body can turn its rounds. When the eccentricity is 1 or even greater than 1, the shape forms an escape orbit, which means it is no longer a closed orbit and a body on such an orbit would simply move further and further away from the center of mass. " [:br][:br] "The center of mass in this animation would be the \"sun\", the focal point of the ellipse marked in " (colorize "yellow" :yellow) ", and the orbiting body marked in " (colorize "blue" :blue)  " turns its rounds on a closed elliptical orbit around it. Note that the speed of the orbiting body (illustrated through the " (colorize "purple arrow" :purple) ") varies throughout the orbit. " [:br][:br] "Please also note that this animation, already shows a special case of a " two-body-problem " called \"central-force-problem\", which has to do with the masses of the two bodys. As later explained by Newton's law of universal gravitation, any partical in the universe attracts any other partical in the universe, whereas the force of this attraction depends on the masses and distances of the particles. This animation shows a simplification, where one mass is significantly larger than the other mass (e.g. the difference between the masses of sun vs. earth), so we act here as if the larger of the two masses exerts attraction on the smaller one, but not the other way round. We basically neglect the gravitational impact that the smaller mass has on the larger one, which is reasonable, as long as the difference in mass is significant enough. This also makes it a lot easier to calculate and draw some nice animation of it :)"]
       [:p.f4.f3-ns.lh-copy.measure.georgia "Second law:"]
       [:p.f4.f2-ns.lh-copy.measure.i.pl4.bl.bw1.b--gold.mb4 "A line segment joining a planet and the Sun sweeps out equal areas during equal intervals of time."]
       [:p
-       [:div.mw5.mw6-ns.center.pt4 {:id "second-law"}]]
+       [:div.mw6.mw6-ns.center.pt1 {:id "second-law"}]]
       [:p:p.f5.f4-ns.lh-copy.mb4 "The animation for the second law tries to illustrate what \"equal areas during equal intervals of time\" means. On the first glance it looks like there are " (colorize "two orbiting bodys" :blue) " now, but this should represent the same body at two different points in time " (colorize "t1" :blue) " and " (colorize "t2" :blue) ". The temporal distance between these two points always stays the same, but the velocities of the bodies change one their way around the orbit, and so their physical distance varies. If you connect the two positions at times " (colorize "t1" :blue) " and " (colorize "t2" :blue) " with the center of mass, they form what " (colorize "looks like a triangle" :purple) " with one curved side. Kepler's second law now states that the area of this \"triangle\" stays constant at all times." [:br][:br] "Looking at it from the other side: the closer the body is to the center of mass, the less area is enclosed between the two, which means the angle that body must cover within the fixed time period is larger, which means the velocity of the body must be higher in order to cover the angle. For calculating the actual velocity of an orbiting body the " (linkify "Vis-Viva equation" "https://en.wikipedia.org/wiki/Vis-viva_equation") " can be used, where the term \"vis-viva\" is latin for \"living force\" and was coined by " (linkify "Gottfried Leibniz" "https://en.wikipedia.org/wiki/Gottfried_Wilhelm_Leibniz") " (1676–1689) to describe what we call today kinetic energy." ]
       [:p.f4.f3-ns.lh-copy.measure.georgia "Third law:"]
       [:p.f4.f2-ns.lh-copy.measure.i.pl4.bl.bw1.b--gold.mb4 "The square of a planet's orbital period is proportional to the cube of the length of the semi-major axis of its orbit."]
-      [:div.mw7.center.pt4
-       [:div.dt.mw6.pb5.pv1-m.pv1-ns
+      [:div.mw7.center.pt1
+       [:div.dt.mw6.pb1.pv1-m.pv1-ns
         [:div.db.dtc-ns.v-mid-ns
          [:div {:id "third-law"}]]
         (controls third-law-state)]]
@@ -87,7 +87,7 @@
                         (q/frame-rate fps)
                         third-law-state) "third-law")
 (render-sketch :kepler-1st-law (fn []
-                                (q/frame-rate fps)
+                                 (q/frame-rate fps)
                                 first-law-state) "first-law")
 
 

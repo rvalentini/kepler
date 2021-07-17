@@ -23,6 +23,7 @@
     (s/draw-dotted-orbit x y width height big-omega )))
 
 (defn draw-state [state]
+  (q/scale (/ s/height 500))
   (q/background 240)
   (s/draw-center-of-gravity (:center-of-gravity @state))
   (let [position (orb/orbital-elements->position (:elliptical-orbit @state))]

@@ -53,6 +53,7 @@
                 :y (+ (:y cog) (* focal-dist (Math/sin big-omega)))}
         second-focus {:x (+ (:x center) (* focal-dist (Math/cos big-omega)))
                       :y (+ (:y center) (* focal-dist (Math/sin big-omega)))}]
+    (q/scale (/ s/height 500))
     (q/background 240)
     (s/draw-center-of-gravity (:center-of-gravity @state) s/yellow)
     (s/draw-center-of-gravity (assoc second-focus :r 10) s/light-grey)
