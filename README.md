@@ -1,6 +1,8 @@
 # kepler
 
-Interactive website explaining the three Kepler laws of planetary motion using animations. 
+Interactive website explaining the three Kepler laws of planetary motion using animations.
+
+You can see the live version [here](https://rvalentini.github.io).
 
 ## Overview
 
