@@ -106,3 +106,8 @@ input[type=range]:focus::-ms-fill-upper {
 input[type=range]:focus.red::-ms-fill-upper {
     background: #ec5858
 }
+
+.smooth-linebreak {
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
