@@ -32,8 +32,8 @@
   (draw-dotted-kepler-orbit @state))
 
 (defmethod s/build-state :kepler-3rd-law []
-  {:center-of-gravity {:x (/ s/width 2)
-                       :y (/ s/height 2)
+  {:center-of-gravity {:x 150
+                       :y 150
                        :r 10}
    :elliptical-orbit  {:t           0
                        :mass        3.674E23
@@ -41,7 +41,7 @@
                        :e           0.6
                        :i           0
                        :small-omega 0
-                       :big-omega   (/ Math/PI 2)}
+                       :big-omega   (* (/ 5 4) Math/PI)}
    :view {:locked-controls []}})
 
 (defmethod s/render-sketch :kepler-3rd-law [_ state-setup host]
